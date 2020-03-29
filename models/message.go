@@ -1,5 +1,26 @@
 package models
 
+const (
+	MessageEntityTypeMention       MessageEntityType = "mention"       // @username
+	MessageEntityTypeHashTag       MessageEntityType = "hashtag"       // #hashtag
+	MessageEntityTypeCashTag       MessageEntityType = "cashtag"       // $USD
+	MessageEntityTypeBotCommand    MessageEntityType = "bot_command"   // /start@jobs_bot
+	MessageEntityTypeURL           MessageEntityType = "url"           // https://telegram.org
+	MessageEntityTypeEmail         MessageEntityType = "email"         // do-not-reply@telegram.org
+	MessageEntityTypePhoneNumber   MessageEntityType = "phone_number"  // +1-212-555-0123
+	MessageEntityTypeBold          MessageEntityType = "bold"          // bold text
+	MessageEntityTypeItalic        MessageEntityType = "italic"        // italic text
+	MessageEntityTypeUnderline     MessageEntityType = "underline"     // underline text
+	MessageEntityTypeStrikethrough MessageEntityType = "strikethrough" // strikethrough text
+	MessageEntityTypeCode          MessageEntityType = "code"          // monowidth string
+	MessageEntityTypePre           MessageEntityType = "pre"           // monowidth string
+	MessageEntityTypeTextLink      MessageEntityType = "text_link"     // for clickable text URLs
+	MessageEntityTypeTextMention   MessageEntityType = "text_mention"  // for users without usernames
+)
+
+// Type of the message entity.
+type MessageEntityType string
+
 // This object represents a message.
 type Message struct {
 	// Unique message identifier inside this chat
@@ -166,4 +187,52 @@ type Message struct {
 
 	// Optional. Inline keyboard attached to the message. login_url buttons are represented as ordinary url buttons.
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
+}
+
+// This object represents one special entity in a text message. For example, hashtags, usernames, URLs, etc.
+type MessageEntity struct {
+	// Type of the entity.
+	Type MessageEntityType `json:"type"`
+
+	// Offset in UTF-16 code units to the start of the entity
+	Offset int32 `json:"offset"`
+
+	// Length of the entity in UTF-16 code units
+	Length int32 `json:"length"`
+
+	// Optional. For “text_link” only, url that will be opened after user taps on the text
+	URL string `json:"url,omitempty"`
+
+	// Optional. For “text_mention” only, the mentioned user
+	User *User `json:"user,omitempty"`
+
+	// Optional. For “pre” only, the programming language of the entity text
+	Language string `json:"language,omitempty"`
+}
+
+// Use this entity to send text messages.
+type MessageRequest struct {
+	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+	ChatID string `json:"chat_id"`
+
+	// Text of the message to be sent, 1-4096 characters after entities parsing
+	Text string `json:"text"`
+
+	// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs
+	// in your bot's message.
+	ParseMode ParseMode `json:"parse_mode,omitempty"`
+
+	// Disables link previews for links in this message
+	DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
+
+	// Sends the message silently. Users will receive a notification with no sound.
+	DisableNotification bool `json:"disable_notification,omitempty"`
+
+	// If the message is a reply, ID of the original message
+	ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
+
+	// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard,
+	// instructions to remove reply keyboard or to force a reply from the user.
+	// Can be one of types: InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
+	ReplyMarkup ReplyMarkupInterface `json:"reply_markup,omitempty"`
 }

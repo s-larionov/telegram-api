@@ -108,3 +108,33 @@ type Update struct {
 	// sent by the bot itself.
 	PollAnswer *PollAnswer `json:"poll_answer,omitempty"`
 }
+
+func (u Update) GetType() UpdateType {
+	switch {
+	case u.Message != nil:
+		return UpdateTypeMessage
+	case u.EditedMessage != nil:
+		return UpdateTypeEditedMessage
+	case u.ChannelPost != nil:
+		return UpdateTypeChannelPost
+	case u.EditedChannelPost != nil:
+		return UpdateTypeEditedChannelPost
+	case u.InlineQuery != nil:
+		return UpdateTypeInlineQuery
+	case u.ChosenInlineResult != nil:
+		return UpdateTypeChosenInlineResult
+	case u.CallbackQuery != nil:
+		return UpdateTypeCallbackQuery
+	case u.ShippingQuery != nil:
+		return UpdateTypeShippingQuery
+	case u.PreCheckoutQuery != nil:
+		return UpdateTypePreCheckoutQuery
+	case u.Poll != nil:
+		return UpdateTypePoll
+	case u.PollAnswer != nil:
+		return UpdateTypePollAnswer
+	default:
+	}
+
+	return ""
+}

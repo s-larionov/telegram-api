@@ -53,3 +53,7 @@ type WebhookInfo struct {
 	// Optional. A list of update types the bot is subscribed to. Defaults to all update types
 	AllowedUpdates []UpdateType `json:"allowed_updates,omitempty"`
 }
+
+func (h WebhookInfo) IsEnabled() bool {
+	return h.URL != ""
+}
