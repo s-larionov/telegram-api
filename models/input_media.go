@@ -10,15 +10,23 @@ const (
 
 type InputMediaType string
 
+type InputMediaInterface interface {
+	GetType() InputMediaType
+}
+
 // This object represents the content of a media message to be sent.
-type InputMedia struct {
+type inputMedia struct {
 	// Type of the result
 	Type InputMediaType `json:"type"`
 }
 
+func (t inputMedia) GetType() InputMediaType {
+	return t.Type
+}
+
 // Represents a photo to be sent.
 type InputMediaPhoto struct {
-	InputMedia
+	inputMedia
 
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL
 	// for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using
@@ -72,7 +80,7 @@ type InputMediaVideo struct {
 
 // Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.
 type InputMediaAnimation struct {
-	InputMedia
+	inputMedia
 
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload
@@ -107,7 +115,7 @@ type InputMediaAnimation struct {
 
 // Represents an audio file to be treated as music to be sent.
 type InputMediaAudio struct {
-	InputMedia
+	inputMedia
 
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>”
@@ -142,7 +150,7 @@ type InputMediaAudio struct {
 
 // Represents a general file to be sent.
 type InputMediaDocument struct {
-	InputMedia
+	inputMedia
 
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>”

@@ -29,3 +29,24 @@ type User struct {
 	// Optional. True, if the bot supports inline queries. Returned only in getMe.
 	SupportsInlineQueries bool `json:"supports_inline_queries,omitempty"`
 }
+
+// This object represent a user's profile pictures.
+type UserProfilePhotos struct {
+	// Total number of profile pictures the target user has
+	TotalCount int `json:"total_count"`
+
+	// Requested profile pictures (in up to 4 sizes each)
+	Photos [][]*PhotoSize `json:"photos"`
+}
+
+// Use this entity to get a list of profile pictures for a user.
+type UserProfilePhotosRequest struct {
+	// Unique identifier of the target user
+	UserID int64 `json:"user_id"`
+
+	// Sequential number of the first photo to be returned. By default, all photos are returned.
+	Offset int `json:"offset,omitempty"`
+
+	// Limits the number of photos to be retrieved. Values between 1—100 are accepted. Defaults to 100.
+	Limit int `json:"limit,omitempty"`
+}

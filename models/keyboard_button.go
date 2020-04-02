@@ -26,6 +26,17 @@ type KeyboardButton struct {
 	RequestPoll *KeyboardButtonPollType `json:"request_poll,omitempty"`
 }
 
+func NewKeyboardButton(text string, contact, location bool, poll *KeyboardButtonPollType) KeyboardButton {
+	button := KeyboardButton{
+		Text:            text,
+		RequestContact:  contact,
+		RequestLocation: location,
+		RequestPoll:     poll,
+	}
+
+	return button
+}
+
 // This object represents type of a poll, which is allowed to be created and sent when the corresponding
 // button is pressed.
 type KeyboardButtonPollType struct {

@@ -118,6 +118,8 @@ func (r Requester) prepareMultipartRequestData(
 		t = v.Type()
 	}
 
+	// FIXME: Support t.Kind() == reflect.Map
+
 	if t.Kind() != reflect.Struct {
 		return nil, nil, errors.New("incorrect type of request: must be struct")
 	}

@@ -44,6 +44,23 @@ type ForceReply struct {
 	Selective bool `json:"selective,omitempty"`
 }
 
+func NewForceReply(selective ...bool) ForceReply {
+	isSelective := false
+	if len(selective) > 0 {
+		isSelective = selective[0]
+	}
+
+	reply := ForceReply{
+		ReplyMarkup: ReplyMarkup{
+			t: ReplyMarkupTypeForceReply,
+		},
+		ForceReply: true,
+		Selective:  isSelective,
+	}
+
+	return reply
+}
+
 // Upon receiving a message with this object, Telegram clients will remove the current custom keyboard and display
 // the default letter-keyboard. By default, custom keyboards are displayed until a new keyboard is sent by a bot.
 // An exception is made for one-time keyboards that are hidden immediately after the user presses a button
@@ -64,12 +81,29 @@ type ReplyKeyboardRemove struct {
 	Selective bool `json:"selective,omitempty"`
 }
 
+func NewKeyboardRemoveReply(selective ...bool) ReplyKeyboardRemove {
+	isSelective := false
+	if len(selective) > 0 {
+		isSelective = selective[0]
+	}
+
+	reply := ReplyKeyboardRemove{
+		ReplyMarkup: ReplyMarkup{
+			t: ReplyMarkupTypeRemoveKeyboard,
+		},
+		RemoveKeyboard: true,
+		Selective:      isSelective,
+	}
+
+	return reply
+}
+
 // This object represents a custom keyboard with reply options (see Introduction to bots for details and examples).
 type ReplyKeyboardMarkup struct {
 	ReplyMarkup
 
 	// Array of button rows, each represented by an Array of KeyboardButton objects
-	Keyboard [][]*KeyboardButton `json:"keyboard"`
+	Keyboard [][]KeyboardButton `json:"keyboard"`
 
 	// Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller
 	// if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always
@@ -90,6 +124,25 @@ type ReplyKeyboardMarkup struct {
 	Selective bool `json:"selective,omitempty"`
 }
 
+func NewKeyboardMarkupReply(keyboard [][]KeyboardButton, resize, oneTime bool, selective ...bool) ReplyKeyboardMarkup {
+	isSelective := false
+	if len(selective) > 0 {
+		isSelective = selective[0]
+	}
+
+	reply := ReplyKeyboardMarkup{
+		ReplyMarkup: ReplyMarkup{
+			t: ReplyMarkupTypeKeyboardMarkup,
+		},
+		Keyboard:        keyboard,
+		ResizeKeyboard:  resize,
+		OneTimeKeyboard: oneTime,
+		Selective:       isSelective,
+	}
+
+	return reply
+}
+
 // This object represents an inline keyboard that appears right next to the message it belongs to.
 //
 // Note: This will only work in Telegram versions released after 9 April, 2016. Older clients
@@ -98,5 +151,16 @@ type InlineKeyboardMarkup struct {
 	ReplyMarkup
 
 	// Array of button rows, each represented by an Array of InlineKeyboardButton objects
-	InlineKeyboard [][]*InlineKeyboardButton `json:"inline_keyboard"`
+	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
+}
+
+func NewInlineKeyboardMarkupReply(keyboard [][]InlineKeyboardButton) InlineKeyboardMarkup {
+	reply := InlineKeyboardMarkup{
+		ReplyMarkup: ReplyMarkup{
+			t: ReplyMarkupTypeInlineKeyboardMarkup,
+		},
+		InlineKeyboard: keyboard,
+	}
+
+	return reply
 }

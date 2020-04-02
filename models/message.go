@@ -210,20 +210,30 @@ type MessageEntity struct {
 	Language string `json:"language,omitempty"`
 }
 
-// Use this entity to send text messages.
-type MessageRequest struct {
+// Use this entity to forward messages of any kind.
+type ForwardMessageRequest struct {
 	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 	ChatID string `json:"chat_id"`
 
-	// Text of the message to be sent, 1-4096 characters after entities parsing
-	Text string `json:"text"`
+	// Unique identifier for the chat where the original message was sent (or channel username
+	// in the format @channelusername)
+	FromChatID string `json:"from_chat_id"`
+
+	// Message identifier in the chat specified in from_chat_id
+	MessageID int64 `json:"message_id"`
+
+	// Sends the message silently. Users will receive a notification with no sound.
+	DisableNotification bool `json:"disable_notification,omitempty"`
+}
+
+// Use this entity to send text messages.
+type MessageRequestBase struct {
+	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+	ChatID string `json:"chat_id"`
 
 	// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs
-	// in your bot's message.
+	// in the media caption.
 	ParseMode ParseMode `json:"parse_mode,omitempty"`
-
-	// Disables link previews for links in this message
-	DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
 
 	// Sends the message silently. Users will receive a notification with no sound.
 	DisableNotification bool `json:"disable_notification,omitempty"`
@@ -235,4 +245,392 @@ type MessageRequest struct {
 	// instructions to remove reply keyboard or to force a reply from the user.
 	// Can be one of types: InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
 	ReplyMarkup ReplyMarkupInterface `json:"reply_markup,omitempty"`
+}
+
+// Use this entity to send text messages.
+type MessageRequest struct {
+	MessageRequestBase
+
+	// Text of the message to be sent, 1-4096 characters after entities parsing
+	Text string `json:"text"`
+
+	// Disables link previews for links in this message
+	DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
+}
+
+// Use this entity to send photos
+type PhotoMessageRequest struct {
+	MessageRequestBase
+
+	// Photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended),
+	// pass an HTTP URL as a String for Telegram to get a photo from the Internet, or upload a new photo using
+	// multipart/form-data.
+	Photo InputFile `json:"photo"`
+
+	// Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
+	Caption string `json:"caption,omitempty"`
+}
+
+// Use this entity to send audio files, if you want Telegram clients to display them in the music player.
+// Your audio must be in the .MP3 or .M4A format.
+type AudioMessageRequest struct {
+	MessageRequestBase
+
+	// Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers
+	// (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload
+	// a new one using multipart/form-data.
+	Audio InputFile `json:"audio"`
+
+	// Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
+	Caption string `json:"caption,omitempty"`
+
+	// Duration of the audio in seconds
+	Duration int `json:"duration,omitempty"`
+
+	// Performer
+	Performer string `json:"performer,omitempty"`
+
+	// Track name
+	Title string `json:"title,omitempty"`
+
+	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side.
+	// The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should
+	// not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused
+	// and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail
+	// was uploaded using multipart/form-data under <file_attach_name>.
+	Thumb InputFile `json:"thumb,omitempty"`
+}
+
+// Use this entity to send general files.
+type DocumentMessageRequest struct {
+	MessageRequestBase
+
+	// File to send. Pass a file_id as String to send a file that exists on the Telegram servers (recommended),
+	// pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using
+	// multipart/form-data.
+	Document InputFile `json:"document"`
+
+	// Document caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
+	Caption string `json:"caption,omitempty"`
+
+	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side.
+	// The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should
+	// not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused
+	// and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail
+	// was uploaded using multipart/form-data under <file_attach_name>
+	Thumb InputFile `json:"thumb,omitempty"`
+}
+
+// Use this entity to send video files.
+type VideoMessageRequest struct {
+	MessageRequestBase
+
+	// Video to send. Pass a file_id as String to send a video that exists on the Telegram servers (recommended),
+	// pass an HTTP URL as a String for Telegram to get a video from the Internet, or upload a new video using
+	// multipart/form-data.
+	Video InputFile `json:"video"`
+
+	// Video caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
+	Caption string `json:"caption,omitempty"`
+
+	// Duration of sent video in seconds
+	Duration int `json:"duration,omitempty"`
+
+	// Video width
+	Width  int `json:"width,omitempty"`
+
+	// Video height
+	Height int `json:"height,omitempty"`
+
+	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side.
+	// The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should
+	// not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused
+	// and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail
+	// was uploaded using multipart/form-data under <file_attach_name>
+	Thumb InputFile `json:"thumb,omitempty"`
+
+	// Pass True, if the uploaded video is suitable for streaming
+	SupportsStreaming bool `json:"supports_streaming,omitempty"`
+}
+
+// Use this entity to send animation files (GIF or H.264/MPEG-4 AVC video without sound).
+type AnimationMessageRequest struct {
+	MessageRequestBase
+
+	// Animation to send. Pass a file_id as String to send an animation that exists on the Telegram
+	// servers (recommended), pass an HTTP URL as a String for Telegram to get an animation from the Internet,
+	// or upload a new animation using multipart/form-data.
+	Animation InputFile `json:"animation"`
+
+	// Animation caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
+	Caption string `json:"caption,omitempty"`
+
+	// Duration of sent animation in seconds
+	Duration int `json:"duration,omitempty"`
+
+	// Animation width
+	Width  int `json:"width,omitempty"`
+
+	// Animation height
+	Height int `json:"height,omitempty"`
+
+	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side.
+	// The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should
+	// not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused
+	// and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail
+	// was uploaded using multipart/form-data under <file_attach_name>
+	Thumb InputFile `json:"thumb,omitempty"`
+}
+
+// As of v.4.0, Telegram clients support rounded square mp4 videos of up to 1 minute long.
+// Use this entity to send video messages.
+type VideoNoteMessageRequest struct {
+	MessageRequestBase
+
+	// Video note to send. Pass a file_id as String to send a video note that exists on the Telegram
+	// servers (recommended) or upload a new video using multipart/form-data.
+	// Sending video notes by a URL is currently unsupported
+	VideoNote InputFile `json:"video_note"`
+
+	// Video caption (may also be used when resending documents by file_id), 0-1024 characters after entities parsing
+	Caption string `json:"caption,omitempty"`
+
+	// Duration of sent video in seconds
+	Duration int `json:"duration,omitempty"`
+
+	// Video width and height, i.e. diameter of the video message
+	Length int `json:"length,omitempty"`
+
+	// Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side.
+	// The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail‘s width and height should
+	// not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can’t be reused
+	// and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail
+	// was uploaded using multipart/form-data under <file_attach_name>
+	Thumb InputFile `json:"thumb,omitempty"`
+}
+
+// Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message.
+// For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as Audio
+// or Document)
+type VoiceMessageRequest struct {
+	MessageRequestBase
+
+	// Audio file to send. Pass a file_id as String to send an audio file that exists on the Telegram servers
+	// (recommended), pass an HTTP URL as a String for Telegram to get an audio file from the Internet, or upload
+	// a new one using multipart/form-data.
+	Voice InputFile `json:"voice"`
+
+	// Photo caption (may also be used when resending photos by file_id), 0-1024 characters after entities parsing
+	Caption string `json:"caption,omitempty"`
+
+	// Duration of the audio in seconds
+	Duration int `json:"duration,omitempty"`
+}
+
+// Use this entity to send a group of photos or videos as an album.
+type MediaGroupMessageRequest struct {
+	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+	ChatID string `json:"chat_id"`
+
+	// A JSON-serialized array describing photos and videos to be sent, must include 2–10 items
+	// Array of InputMediaPhoto and InputMediaVideo
+	Media []InputMediaInterface `json:"media"`
+
+	// If the message is a reply, ID of the original message
+	ReplyToMessageID int64 `json:"reply_to_message_id,omitempty"`
+
+	// Sends the message silently. Users will receive a notification with no sound.
+	DisableNotification bool `json:"disable_notification,omitempty"`
+}
+
+// Use this entity to send point on the map.
+type LocationMessageRequest struct {
+	MessageRequestBase
+
+	// Latitude of the location
+	Latitude float64 `json:"latitude"`
+
+	// Longitude of the location
+	Longitude float64 `json:"longitude"`
+
+	// Period in seconds for which the location will be updated.
+	// See [Live Locations](https://telegram.org/blog/live-locations), should be between 60 and 86400.
+	LivePeriod int32 `json:"live_period,omitempty"`
+}
+
+// Use this entity to edit live location messages. A location can be edited until its live_period expires
+// or editing is explicitly disabled by a call to stopMessageLiveLocation.
+type EditMessageLiveLocation struct {
+	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+	ChatID string `json:"chat_id"`
+
+	// Latitude of the location
+	Latitude float64 `json:"latitude"`
+
+	// Longitude of the location
+	Longitude float64 `json:"longitude"`
+
+	// Required if inline_message_id is not specified. Identifier of the message to edit
+	MessageID int64 `json:"message_id,omitempty"`
+
+	// Required if chat_id and message_id are not specified. Identifier of the inline message
+	InlineMessageID int64 `json:"inline_message_id,omitempty"`
+
+	// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard,
+	// instructions to remove reply keyboard or to force a reply from the user.
+	// Can be one of types: InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
+	ReplyMarkup ReplyMarkupInterface `json:"reply_markup,omitempty"`
+}
+
+// Use this entity to edit live location messages. A location can be edited until its live_period expires
+// or editing is explicitly disabled by a call to stopMessageLiveLocation.
+type StopMessageLiveLocation struct {
+	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+	ChatID string `json:"chat_id"`
+
+	// Required if inline_message_id is not specified. Identifier of the message to edit
+	MessageID int64 `json:"message_id,omitempty"`
+
+	// Required if chat_id and message_id are not specified. Identifier of the inline message
+	InlineMessageID int64 `json:"inline_message_id,omitempty"`
+
+	// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard,
+	// instructions to remove reply keyboard or to force a reply from the user.
+	// Can be one of types: InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
+	ReplyMarkup ReplyMarkupInterface `json:"reply_markup,omitempty"`
+}
+
+// Use this entity to send information about a venue.
+type VenueMessageRequest struct {
+	MessageRequestBase
+
+	// Latitude of the location
+	Latitude float64 `json:"latitude"`
+
+	// Longitude of the location
+	Longitude float64 `json:"longitude"`
+
+	// Name of the venue
+	Title string `json:"title"`
+
+	// Address of the venue
+	Address string `json:"address"`
+
+	// Foursquare identifier of the venue
+	FoursquareID string `json:"foursquare_id,omitempty"`
+
+	// Foursquare type of the venue, if known. (For example, “arts_entertainment/default”,
+	// “arts_entertainment/aquarium” or “food/icecream”.)
+	FoursquareType string `json:"foursquare_type,omitempty"`
+}
+
+// Use this entity to send phone contacts.
+type ContactMessageRequest struct {
+	MessageRequestBase
+
+	// Contact's phone number
+	PhoneNumber string `json:"phone_number"`
+
+	// Contact's first name
+	FirstName string `json:"first_name"`
+
+	// Optional. Contact's last name
+	LastName string `json:"last_name,omitempty"`
+
+	// Additional data about the contact in the form of a vCard, 0-2048 bytes
+	VCard string `json:"vcard,omitempty"`
+}
+
+// Use this entity to send a native poll.
+type PollMessageRequest struct {
+	MessageRequestBase
+
+	// Poll question, 1-255 characters
+	Question string `json:"question"`
+
+	// A JSON-serialized list of answer options, 2-10 strings 1-100 characters each
+	Options []string `json:"options"`
+
+	// True, if the poll needs to be anonymous, defaults to True
+	IsAnonymous bool `json:"is_anonymous,omitempty"`
+
+	// Poll type, “quiz” or “regular”, defaults to “regular”
+	Type PollType `json:"type,omitempty"`
+
+	// True, if the poll allows multiple answers, ignored for polls in quiz mode, defaults to False
+	AllowsMultipleAnswers bool `json:"allows_multiple_answers,omitempty"`
+
+	// 0-based identifier of the correct answer option, required for polls in quiz mode
+	CorrectOptionID int `json:"correct_option_id"`
+
+	// Pass True, if the poll needs to be immediately closed. This can be useful for poll preview.
+	IsClosed bool `json:"is_closed,omitempty"`
+}
+
+// Use this entity to stop a poll which was sent by the bot.
+type StopPollRequest struct {
+	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
+	ChatID string `json:"chat_id"`
+
+	// Identifier of the original message with the poll
+	MessageID int64 `json:"message_id"`
+
+	// Optional. A JSON-serialized object for a new message inline keyboard.
+	ReplyMarkup ReplyMarkupInterface `json:"reply_markup,omitempty"`
+}
+
+// Use this entity to send a dice, which will have a random value from 1 to 6.
+type DiceMessageRequest struct {
+	MessageRequestBase
+}
+
+type editMessageRequest struct {
+	// Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target
+	// channel (in the format @channelusername)
+	ChatID string `json:"chat_id,omitempty"`
+
+	// Required if inline_message_id is not specified. Identifier of the message to edit
+	MessageID int64 `json:"message_id,omitempty"`
+
+	// Required if chat_id and message_id are not specified. Identifier of the inline message
+	InlineMessageID int64 `json:"inline_message_id,omitempty"`
+
+	// Send Markdown or HTML, if you want Telegram apps to show bold, italic, fixed-width text or inline URLs
+	// in your bot's message.
+	ParseMode ParseMode `json:"parse_mode,omitempty"`
+
+	// A JSON-serialized object for an inline keyboard.
+	ReplyMarkup ReplyMarkupInterface `json:"reply_markup,omitempty"`
+}
+
+// Use this entity to edit text and game messages.
+type EditMessageTextRequest struct {
+	editMessageRequest
+
+	// New text of the message, 1-4096 characters after entities parsing
+	Text string `json:"text"`
+
+	// Optional. Disables link previews for links in this message
+	DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
+}
+
+// Use this entity to edit text and game messages.
+type EditMessageCaptionRequest struct {
+	editMessageRequest
+
+	// Optional. New caption of the message, 0-1024 characters after entities parsing
+	Caption string `json:"caption"`
+}
+
+// Use this entity to edit animation, audio, document, photo, or video messages.
+type EditMessageMediaRequest struct {
+	editMessageRequest
+
+	// Optional. New caption of the message, 0-1024 characters after entities parsing
+	Media InputMediaInterface `json:"media"`
+}
+
+// Use this entity to edit only the reply markup of messages
+type EditMessageReplyMarkupRequest struct {
+	editMessageRequest
 }
