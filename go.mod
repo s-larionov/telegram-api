@@ -1,4 +1,4 @@
-module telegram
+module github.com/s-larionov/telegram-api
 
 go 1.14
 
