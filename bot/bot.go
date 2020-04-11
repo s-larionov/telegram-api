@@ -6,8 +6,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"telegram"
-	"telegram/models"
+	"github.com/s-larionov/telegram-api"
+	"github.com/s-larionov/telegram-api/models"
 )
 
 type handler func(update models.Update) error

@@ -3,8 +3,8 @@ package bot
 import (
 	"sync"
 
-	"telegram"
-	"telegram/models"
+	"github.com/s-larionov/telegram-api"
+	"github.com/s-larionov/telegram-api/models"
 )
 
 const StepNone StepName = ""

@@ -3,7 +3,7 @@ package events
 import (
 	"sync"
 
-	"telegram/models"
+	"github.com/s-larionov/telegram-api/models"
 )
 
 const subscriberChannelBufferSize = 5

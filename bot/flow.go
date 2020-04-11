@@ -6,7 +6,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"telegram/models"
+	"github.com/s-larionov/telegram-api/models"
 )
 
 var (

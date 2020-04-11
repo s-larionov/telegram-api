@@ -14,7 +14,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"telegram/models"
+	"github.com/s-larionov/telegram-api/models"
 )
 
 const apiURL = "https://api.telegram.org"
