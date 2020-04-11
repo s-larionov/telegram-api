@@ -4,6 +4,8 @@ import (
 	"context"
 	"sync"
 
+	log "github.com/sirupsen/logrus"
+
 	"telegram"
 	"telegram/models"
 )
@@ -55,8 +57,12 @@ func (b *Bot) subscribe(ctx context.Context, t models.UpdateType, handler handle
 				// TODO: ctx.Err()
 				return
 			case u = <-ch:
-				// TODO: errors
-				_ = handler(u)
+				err := handler(u)
+				if err == ErrUnsupportedEvent {
+					log.WithError(err).Info("unsupported event")
+				} else if err != nil {
+					log.WithError(err).Error("unable to process request")
+				}
 			}
 		}
 	}()

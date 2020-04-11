@@ -3,40 +3,49 @@ package bot
 import (
 	"sync"
 
+	"telegram"
 	"telegram/models"
 )
+
+const StepNone StepName = ""
 
 type StepName string
 
 type Step interface {
 	GetName() StepName
-	IsAllowedFrom(step Step) bool
-	AllowFrom(step Step) error
-	DenyFrom(step Step) error
-	Process(*Session, interface{}) error
-	OnFinish(*Session) error
-	Supports(t models.UpdateType) bool
+	IsAllowedFrom(StepName) bool
+	AllowFrom(StepName)
+	DenyFrom(StepName)
+	Process(*Session, models.Update) error
+	OnLeave(*Session, models.Update) error
+	Supports(models.Update) bool
 }
 
 type StepBase struct {
 	lock    sync.RWMutex
-	allowed []Step
-	denied  []Step
+	allowed []StepName
+	denied  []StepName
+	API     *telegram.API
 	Name    StepName
+}
+
+func NewStepBase(name StepName, api *telegram.API) StepBase {
+	return StepBase{
+		API:  api,
+		Name: name,
+	}
 }
 
 func (s *StepBase) GetName() StepName {
 	return s.Name
 }
 
-func (s *StepBase) IsAllowedFrom(step Step) bool {
+func (s *StepBase) IsAllowedFrom(step StepName) bool {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
 
-	name := step.GetName()
-
 	for _, st := range s.denied {
-		if st.GetName() == name {
+		if st == step {
 			return false
 		}
 	}
@@ -46,7 +55,7 @@ func (s *StepBase) IsAllowedFrom(step Step) bool {
 	}
 
 	for _, st := range s.allowed {
-		if st.GetName() == name {
+		if st == step {
 			return true
 		}
 	}
@@ -54,32 +63,28 @@ func (s *StepBase) IsAllowedFrom(step Step) bool {
 	return false
 }
 
-func (s *StepBase) AllowFrom(step Step) error {
+func (s *StepBase) AllowFrom(step StepName) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
 	s.allowed = append(s.allowed, step)
-
-	return nil
 }
 
-func (s *StepBase) DenyFrom(step Step) error {
+func (s *StepBase) DenyFrom(step StepName) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
 	s.denied = append(s.denied, step)
+}
 
+func (s *StepBase) Process(_ *Session, _ models.Update) error {
 	return nil
 }
 
-func (s *StepBase) Process(_ *Session, _ interface{}) error {
+func (s *StepBase) OnLeave(_ *Session, _ models.Update) error {
 	return nil
 }
 
-func (s *StepBase) OnFinish(_ *Session) error {
-	return nil
-}
-
-func (s *StepBase) Supports(_ models.UpdateType) bool {
+func (s *StepBase) Supports(_ models.Update) bool {
 	return true
 }

@@ -12,7 +12,7 @@ type Session struct {
 
 func NewSession(userID int64) *Session {
 	return &Session{
-		state:  &State{},
+		state:  NewState(),
 		UserID: userID,
 	}
 }

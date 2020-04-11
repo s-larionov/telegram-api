@@ -63,7 +63,7 @@ func (f *Flow) onMessage(u models.Update) error {
 
 	session := f.storage.Load(u.Message.From.ID)
 
-	return f.process(u.GetType(), session, u.Message)
+	return f.process(u.GetType(), session, u)
 }
 
 func (f *Flow) onMessageEdit(u models.Update) error {
@@ -75,7 +75,7 @@ func (f *Flow) onMessageEdit(u models.Update) error {
 
 	session := f.storage.Load(u.EditedMessage.From.ID)
 
-	return f.process(u.GetType(), session, u.EditedMessage)
+	return f.process(u.GetType(), session, u)
 }
 
 func (f *Flow) onChannelPost(u models.Update) error {
@@ -88,7 +88,7 @@ func (f *Flow) onChannelPost(u models.Update) error {
 
 	session := f.storage.Load(u.ChannelPost.From.ID)
 
-	return f.process(u.GetType(), session, u.ChannelPost)
+	return f.process(u.GetType(), session, u)
 }
 
 func (f *Flow) onChannelPostEdit(u models.Update) error {
@@ -101,7 +101,7 @@ func (f *Flow) onChannelPostEdit(u models.Update) error {
 
 	session := f.storage.Load(u.EditedChannelPost.From.ID)
 
-	return f.process(u.GetType(), session, u.EditedChannelPost)
+	return f.process(u.GetType(), session, u)
 }
 
 func (f *Flow) onInlineQuery(u models.Update) error {
@@ -113,7 +113,7 @@ func (f *Flow) onInlineQuery(u models.Update) error {
 
 	session := f.storage.Load(u.InlineQuery.From.ID)
 
-	return f.process(u.GetType(), session, u.InlineQuery)
+	return f.process(u.GetType(), session, u)
 }
 
 func (f *Flow) onChosenInlineResult(u models.Update) error {
@@ -126,7 +126,7 @@ func (f *Flow) onChosenInlineResult(u models.Update) error {
 
 	session := f.storage.Load(u.ChosenInlineResult.From.ID)
 
-	return f.process(u.GetType(), session, u.ChosenInlineResult)
+	return f.process(u.GetType(), session, u)
 }
 
 func (f *Flow) onCallbackQuery(u models.Update) error {
@@ -140,7 +140,7 @@ func (f *Flow) onCallbackQuery(u models.Update) error {
 
 	session := f.storage.Load(u.CallbackQuery.From.ID)
 
-	return f.process(u.GetType(), session, u.CallbackQuery)
+	return f.process(u.GetType(), session, u)
 }
 
 func (f *Flow) onShippingQuery(u models.Update) error {
@@ -153,7 +153,7 @@ func (f *Flow) onShippingQuery(u models.Update) error {
 
 	session := f.storage.Load(u.ShippingQuery.From.ID)
 
-	return f.process(u.GetType(), session, u.ShippingQuery)
+	return f.process(u.GetType(), session, u)
 }
 
 func (f *Flow) onPreCheckoutQuery(u models.Update) error {
@@ -167,7 +167,7 @@ func (f *Flow) onPreCheckoutQuery(u models.Update) error {
 
 	session := f.storage.Load(u.PreCheckoutQuery.From.ID)
 
-	return f.process(u.GetType(), session, u.PreCheckoutQuery)
+	return f.process(u.GetType(), session, u)
 }
 
 func (f *Flow) onPoll(u models.Update) error {
@@ -178,7 +178,7 @@ func (f *Flow) onPoll(u models.Update) error {
 
 	session := f.storage.Load(u.PollAnswer.User.ID)
 
-	return f.process(u.GetType(), session, u.Poll)
+	return f.process(u.GetType(), session, u)
 }
 
 func (f *Flow) onPollAnswer(u models.Update) error {
@@ -190,44 +190,69 @@ func (f *Flow) onPollAnswer(u models.Update) error {
 
 	session := f.storage.Load(u.PollAnswer.User.ID)
 
-	return f.process(u.GetType(), session, u.PollAnswer)
+	return f.process(u.GetType(), session, u)
 }
 
-func (f *Flow) process(t models.UpdateType, session *Session, event interface{}) error {
-	step, err := f.findStep(t)
+func (f *Flow) process(t models.UpdateType, session *Session, u models.Update) error {
+	state := session.GetState()
+
+	step, err := f.findStep(state, u)
 	if err != nil {
 		return err
 	}
 
-	state := session.GetState()
+	if state.step != StepNone {
+		finishedStep, err := f.findStepByName(state.GetCurrentStep())
+		if err != nil {
+			return err
+		}
 
-	if state.Step != nil {
-		err = state.Step.OnFinish(session)
+		err = finishedStep.OnLeave(session, u)
 		if err != nil {
 			return err
 		}
 	}
 
-	err = step.Process(session, event)
+	state.SetCurrentStep(step.GetName())
+	session.UpdateState(state)
+
+	err = step.Process(session, u)
 	if err != nil {
 		return err
 	}
 
-	state.Step = step
-
-	session.UpdateState(state)
-
 	return nil
 }
 
-func (f *Flow) findStep(t models.UpdateType) (Step, error) {
+func (f *Flow) findStep(state *State, u models.Update) (Step, error) {
 	f.stepsLock.RLock()
 	defer f.stepsLock.RUnlock()
 
 	for _, step := range f.steps {
-		if step.Supports(t) {
-			return step, nil
+		if !step.Supports(u) {
+			continue
 		}
+
+		if !step.IsAllowedFrom(state.step) {
+			continue
+		}
+
+		return step, nil
+	}
+
+	return nil, ErrUnsupportedEvent
+}
+
+func (f *Flow) findStepByName(name StepName) (Step, error) {
+	f.stepsLock.RLock()
+	defer f.stepsLock.RUnlock()
+
+	for _, step := range f.steps {
+		if step.GetName() != name {
+			continue
+		}
+
+		return step, nil
 	}
 
 	return nil, ErrUnsupportedEvent
