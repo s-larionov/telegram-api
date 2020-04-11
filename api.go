@@ -7,14 +7,14 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"telegram/events"
-	"telegram/models"
-	telegram "telegram/request"
+	"github.com/s-larionov/telegram-api/events"
+	"github.com/s-larionov/telegram-api/models"
+	"github.com/s-larionov/telegram-api/request"
 )
 
 type API struct {
 	subscribers *events.Container
-	requester   *telegram.Requester
+	requester   *request.Requester
 }
 
 func NewAPI(token string) *API {
@@ -24,7 +24,7 @@ func NewAPI(token string) *API {
 func NewAPIWithClient(token string, client *http.Client) *API {
 	return &API{
 		subscribers: events.NewContainer(),
-		requester:   telegram.NewRequesterWithClient(token, client),
+		requester:   request.NewRequesterWithClient(token, client),
 	}
 }
 
@@ -347,16 +347,16 @@ func (b *API) GetFile(fileID string) (string, error) {
 // untilTimestamp - Date when the user will be unbanned, unix time. If user is banned for more than 366 days or less
 //                  than 30 seconds from the current time they are considered to be banned forever
 func (b *API) KickChatMember(chatID string, userID int64, untilTimestamp ...int64) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
 		"user_id": userID,
 	}
 
 	if len(untilTimestamp) > 0 {
-		request["until_date"] = untilTimestamp[0]
+		r["until_date"] = untilTimestamp[0]
 	}
 
-	_, err := b.requester.JSONRequest("kickChatMember", request)
+	_, err := b.requester.JSONRequest("kickChatMember", r)
 	if err != nil {
 		return false, err
 	}
@@ -372,12 +372,12 @@ func (b *API) KickChatMember(chatID string, userID int64, untilTimestamp ...int6
 //                  or channel (in the format @channelusername)
 // userID         - Unique identifier of the target user
 func (b *API) UnbanChatMember(chatID string, userID int64) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
 		"user_id": userID,
 	}
 
-	_, err := b.requester.JSONRequest("unbanChatMember", request)
+	_, err := b.requester.JSONRequest("unbanChatMember", r)
 	if err != nil {
 		return false, err
 	}
@@ -416,13 +416,13 @@ func (b *API) PromoteChatMember(request models.ChatMemberPromotionRequest) (bool
 // userID - Unique identifier of the target user
 // title  - New custom title for the administrator; 0-16 characters, emoji are not allowed
 func (b *API) SetChatAdministratorCustomTitle(chatID string, userID int64, title string) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id":      chatID,
 		"user_id":      userID,
 		"custom_title": title,
 	}
 
-	_, err := b.requester.JSONRequest("setChatAdministratorCustomTitle", request)
+	_, err := b.requester.JSONRequest("setChatAdministratorCustomTitle", r)
 	if err != nil {
 		return false, err
 	}
@@ -437,12 +437,12 @@ func (b *API) SetChatAdministratorCustomTitle(chatID string, userID int64, title
 //               (in the format @supergroupusername)
 // permissions - New default chat permissions
 func (b *API) SetChatPermissions(chatID string, permissions models.ChatPermissions) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id":     chatID,
 		"permissions": permissions,
 	}
 
-	_, err := b.requester.JSONRequest("setChatPermissions", request)
+	_, err := b.requester.JSONRequest("setChatPermissions", r)
 	if err != nil {
 		return false, err
 	}
@@ -460,11 +460,11 @@ func (b *API) SetChatPermissions(chatID string, permissions models.ChatPermissio
 //       via the getChat method. If your bot needs to generate a new invite link replacing its previous one,
 //       use exportChatInviteLink again.
 func (b *API) ExportChatInviteLink(chatID string) (string, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	data, err := b.requester.JSONRequest("exportChatInviteLink", request)
+	data, err := b.requester.JSONRequest("exportChatInviteLink", r)
 	if err != nil {
 		return "", err
 	}
@@ -484,11 +484,11 @@ func (b *API) SetChatPhoto(request models.ChatSetPhotoRequest) (bool, error) {
 // Use this method to delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator
 // in the chat for this to work and must have the appropriate admin rights. Returns True on success.
 func (b *API) DeleteChatPhoto(chatID string) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	_, err := b.requester.JSONRequest("deleteChatPhoto", request)
+	_, err := b.requester.JSONRequest("deleteChatPhoto", r)
 
 	return err == nil, err
 }
@@ -500,12 +500,12 @@ func (b *API) DeleteChatPhoto(chatID string) (bool, error) {
 // chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 // title  - New chat title, 1-255 characters
 func (b *API) SetChatTitle(chatID, title string) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
 		"title":   title,
 	}
 
-	_, err := b.requester.JSONRequest("setChatTitle", request)
+	_, err := b.requester.JSONRequest("setChatTitle", r)
 
 	return err == nil, err
 }
@@ -517,12 +517,12 @@ func (b *API) SetChatTitle(chatID, title string) (bool, error) {
 //                (in the format @channelusername)
 // description  - New chat description, 1-255 characters
 func (b *API) SetChatDescription(chatID, description string) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id":     chatID,
 		"description": description,
 	}
 
-	_, err := b.requester.JSONRequest("setChatDescription", request)
+	_, err := b.requester.JSONRequest("setChatDescription", r)
 
 	return err == nil, err
 }
@@ -536,16 +536,16 @@ func (b *API) SetChatDescription(chatID, description string) (bool, error) {
 // messageID           - Identifier of a message to pin
 // disableNotification - Pass True, if it is not necessary to send a notification to all chat members about the new pinned message. Notifications are always disabled in channels.
 func (b *API) PinChatMessage(chatID string, messageID int64, disableNotification ...bool) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id":    chatID,
 		"message_id": messageID,
 	}
 
 	if len(disableNotification) > 0 {
-		request["disable_notification"] = disableNotification[0]
+		r["disable_notification"] = disableNotification[0]
 	}
 
-	_, err := b.requester.JSONRequest("pinChatMessage", request)
+	_, err := b.requester.JSONRequest("pinChatMessage", r)
 
 	return err == nil, err
 }
@@ -556,11 +556,11 @@ func (b *API) PinChatMessage(chatID string, messageID int64, disableNotification
 //
 // chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 func (b *API) UnpinChatMessage(chatID string) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	_, err := b.requester.JSONRequest("unpinChatMessage", request)
+	_, err := b.requester.JSONRequest("unpinChatMessage", r)
 
 	return err == nil, err
 }
@@ -569,11 +569,11 @@ func (b *API) UnpinChatMessage(chatID string) (bool, error) {
 //
 // chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 func (b *API) LeaveChat(chatID string) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	_, err := b.requester.JSONRequest("leaveChat", request)
+	_, err := b.requester.JSONRequest("leaveChat", r)
 
 	return err == nil, err
 }
@@ -583,11 +583,11 @@ func (b *API) LeaveChat(chatID string) (bool, error) {
 //
 // chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 func (b *API) GetChat(chatID string) (*models.Chat, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	data, err := b.requester.JSONRequest("getChat", request)
+	data, err := b.requester.JSONRequest("getChat", r)
 	if err != nil {
 		return nil, err
 	}
@@ -607,11 +607,11 @@ func (b *API) GetChat(chatID string) (*models.Chat, error) {
 //
 // chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 func (b *API) GetChatAdministrators(chatID string) ([]string, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	data, err := b.requester.JSONRequest("getChat", request)
+	data, err := b.requester.JSONRequest("getChat", r)
 	if err != nil {
 		return nil, err
 	}
@@ -629,11 +629,11 @@ func (b *API) GetChatAdministrators(chatID string) ([]string, error) {
 //
 // chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 func (b *API) GetChatMembersCount(chatID string) (int, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	data, err := b.requester.JSONRequest("getChat", request)
+	data, err := b.requester.JSONRequest("getChat", r)
 	if err != nil {
 		return 0, err
 	}
@@ -652,11 +652,12 @@ func (b *API) GetChatMembersCount(chatID string) (int, error) {
 // chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 // userID - Unique identifier of the target user
 func (b *API) GetChatMember(chatID string, userID int64) (*models.ChatMember, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
+		"user_id": userID,
 	}
 
-	data, err := b.requester.JSONRequest("getChatMember", request)
+	data, err := b.requester.JSONRequest("getChatMember", r)
 	if err != nil {
 		return nil, err
 	}
@@ -677,12 +678,12 @@ func (b *API) GetChatMember(chatID string, userID int64) (*models.ChatMember, er
 // chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 // userID - Unique identifier of the target user
 func (b *API) SetChatStickerSet(chatID, name string) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id":          chatID,
 		"sticker_set_name": name,
 	}
 
-	_, err := b.requester.JSONRequest("setChatStickerSet", request)
+	_, err := b.requester.JSONRequest("setChatStickerSet", r)
 
 	return err == nil, err
 }
@@ -693,11 +694,11 @@ func (b *API) SetChatStickerSet(chatID, name string) (bool, error) {
 //
 // chatID - Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 func (b *API) DeleteChatStickerSet(chatID string) (bool, error) {
-	request := map[string]interface{}{
+	r := map[string]interface{}{
 		"chat_id": chatID,
 	}
 
-	_, err := b.requester.JSONRequest("deleteChatStickerSet", request)
+	_, err := b.requester.JSONRequest("deleteChatStickerSet", r)
 
 	return err == nil, err
 }

@@ -27,17 +27,17 @@ func NewBot(api *telegram.API, flow *Flow) *Bot {
 }
 
 func (b *Bot) Run(ctx context.Context) error {
-	b.subscribe(ctx, models.UpdateTypeMessage, b.Flow.onMessage)
-	b.subscribe(ctx, models.UpdateTypeEditedMessage, b.Flow.onMessageEdit)
-	b.subscribe(ctx, models.UpdateTypeChannelPost, b.Flow.onChannelPost)
-	b.subscribe(ctx, models.UpdateTypeEditedChannelPost, b.Flow.onChannelPostEdit)
-	b.subscribe(ctx, models.UpdateTypeInlineQuery, b.Flow.onInlineQuery)
-	b.subscribe(ctx, models.UpdateTypeChosenInlineResult, b.Flow.onChosenInlineResult)
-	b.subscribe(ctx, models.UpdateTypeCallbackQuery, b.Flow.onCallbackQuery)
-	b.subscribe(ctx, models.UpdateTypeShippingQuery, b.Flow.onShippingQuery)
-	b.subscribe(ctx, models.UpdateTypePreCheckoutQuery, b.Flow.onPreCheckoutQuery)
-	b.subscribe(ctx, models.UpdateTypePoll, b.Flow.onPoll)
-	b.subscribe(ctx, models.UpdateTypePollAnswer, b.Flow.onPollAnswer)
+	b.subscribe(ctx, models.UpdateTypeMessage, b.Flow.OnMessage)
+	b.subscribe(ctx, models.UpdateTypeEditedMessage, b.Flow.OnMessageEdit)
+	b.subscribe(ctx, models.UpdateTypeChannelPost, b.Flow.OnChannelPost)
+	b.subscribe(ctx, models.UpdateTypeEditedChannelPost, b.Flow.OnChannelPostEdit)
+	b.subscribe(ctx, models.UpdateTypeInlineQuery, b.Flow.OnInlineQuery)
+	b.subscribe(ctx, models.UpdateTypeChosenInlineResult, b.Flow.OnChosenInlineResult)
+	b.subscribe(ctx, models.UpdateTypeCallbackQuery, b.Flow.OnCallbackQuery)
+	b.subscribe(ctx, models.UpdateTypeShippingQuery, b.Flow.OnShippingQuery)
+	b.subscribe(ctx, models.UpdateTypePreCheckoutQuery, b.Flow.OnPreCheckoutQuery)
+	b.subscribe(ctx, models.UpdateTypePoll, b.Flow.OnPoll)
+	b.subscribe(ctx, models.UpdateTypePollAnswer, b.Flow.OnPollAnswer)
 
 	b.wg.Wait()
 

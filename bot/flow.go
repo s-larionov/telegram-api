@@ -54,7 +54,7 @@ func (f *Flow) AddStep(step Step) error {
 	return nil
 }
 
-func (f *Flow) onMessage(u models.Update) error {
+func (f *Flow) OnMessage(u models.Update) error {
 	log.WithFields(log.Fields{
 		"from_id":    u.Message.From.ID,
 		"message_id": u.Message.ID,
@@ -63,10 +63,10 @@ func (f *Flow) onMessage(u models.Update) error {
 
 	session := f.storage.Load(u.Message.From.ID)
 
-	return f.process(u.GetType(), session, u)
+	return f.process(session, u)
 }
 
-func (f *Flow) onMessageEdit(u models.Update) error {
+func (f *Flow) OnMessageEdit(u models.Update) error {
 	log.WithFields(log.Fields{
 		"from_id":    u.EditedMessage.From.ID,
 		"message_id": u.EditedMessage.ID,
@@ -75,10 +75,10 @@ func (f *Flow) onMessageEdit(u models.Update) error {
 
 	session := f.storage.Load(u.EditedMessage.From.ID)
 
-	return f.process(u.GetType(), session, u)
+	return f.process(session, u)
 }
 
-func (f *Flow) onChannelPost(u models.Update) error {
+func (f *Flow) OnChannelPost(u models.Update) error {
 	log.WithFields(log.Fields{
 		"from_id": u.ChannelPost.From.ID,
 		"chat_id": u.ChannelPost.Chat.ID,
@@ -88,10 +88,10 @@ func (f *Flow) onChannelPost(u models.Update) error {
 
 	session := f.storage.Load(u.ChannelPost.From.ID)
 
-	return f.process(u.GetType(), session, u)
+	return f.process(session, u)
 }
 
-func (f *Flow) onChannelPostEdit(u models.Update) error {
+func (f *Flow) OnChannelPostEdit(u models.Update) error {
 	log.WithFields(log.Fields{
 		"from_id": u.EditedChannelPost.From.ID,
 		"chat_id": u.EditedChannelPost.Chat.ID,
@@ -101,10 +101,10 @@ func (f *Flow) onChannelPostEdit(u models.Update) error {
 
 	session := f.storage.Load(u.EditedChannelPost.From.ID)
 
-	return f.process(u.GetType(), session, u)
+	return f.process(session, u)
 }
 
-func (f *Flow) onInlineQuery(u models.Update) error {
+func (f *Flow) OnInlineQuery(u models.Update) error {
 	log.WithFields(log.Fields{
 		"from_id":  u.InlineQuery.From.ID,
 		"query_id": u.InlineQuery.ID,
@@ -113,10 +113,10 @@ func (f *Flow) onInlineQuery(u models.Update) error {
 
 	session := f.storage.Load(u.InlineQuery.From.ID)
 
-	return f.process(u.GetType(), session, u)
+	return f.process(session, u)
 }
 
-func (f *Flow) onChosenInlineResult(u models.Update) error {
+func (f *Flow) OnChosenInlineResult(u models.Update) error {
 	log.WithFields(log.Fields{
 		"from_id":           u.ChosenInlineResult.From.ID,
 		"query":             u.ChosenInlineResult.Query,
@@ -126,10 +126,10 @@ func (f *Flow) onChosenInlineResult(u models.Update) error {
 
 	session := f.storage.Load(u.ChosenInlineResult.From.ID)
 
-	return f.process(u.GetType(), session, u)
+	return f.process(session, u)
 }
 
-func (f *Flow) onCallbackQuery(u models.Update) error {
+func (f *Flow) OnCallbackQuery(u models.Update) error {
 	log.WithFields(log.Fields{
 		"from_id":      u.CallbackQuery.From.ID,
 		"message_id":   u.CallbackQuery.Message.ID,
@@ -140,10 +140,10 @@ func (f *Flow) onCallbackQuery(u models.Update) error {
 
 	session := f.storage.Load(u.CallbackQuery.From.ID)
 
-	return f.process(u.GetType(), session, u)
+	return f.process(session, u)
 }
 
-func (f *Flow) onShippingQuery(u models.Update) error {
+func (f *Flow) OnShippingQuery(u models.Update) error {
 	log.WithFields(log.Fields{
 		"from_id": u.ShippingQuery.From.ID,
 		"invoice": u.ShippingQuery.InvoicePayload,
@@ -153,10 +153,10 @@ func (f *Flow) onShippingQuery(u models.Update) error {
 
 	session := f.storage.Load(u.ShippingQuery.From.ID)
 
-	return f.process(u.GetType(), session, u)
+	return f.process(session, u)
 }
 
-func (f *Flow) onPreCheckoutQuery(u models.Update) error {
+func (f *Flow) OnPreCheckoutQuery(u models.Update) error {
 	log.WithFields(log.Fields{
 		"from_id":  u.PreCheckoutQuery.From.ID,
 		"invoice":  u.PreCheckoutQuery.InvoicePayload,
@@ -167,10 +167,10 @@ func (f *Flow) onPreCheckoutQuery(u models.Update) error {
 
 	session := f.storage.Load(u.PreCheckoutQuery.From.ID)
 
-	return f.process(u.GetType(), session, u)
+	return f.process(session, u)
 }
 
-func (f *Flow) onPoll(u models.Update) error {
+func (f *Flow) OnPoll(u models.Update) error {
 	log.WithFields(log.Fields{
 		"poll_id":   u.Poll.ID,
 		"poll_type": u.Poll.Type,
@@ -178,10 +178,10 @@ func (f *Flow) onPoll(u models.Update) error {
 
 	session := f.storage.Load(u.PollAnswer.User.ID)
 
-	return f.process(u.GetType(), session, u)
+	return f.process(session, u)
 }
 
-func (f *Flow) onPollAnswer(u models.Update) error {
+func (f *Flow) OnPollAnswer(u models.Update) error {
 	log.WithFields(log.Fields{
 		"user_id":    u.PollAnswer.User.ID,
 		"poll_id":    u.PollAnswer.PollID,
@@ -190,10 +190,10 @@ func (f *Flow) onPollAnswer(u models.Update) error {
 
 	session := f.storage.Load(u.PollAnswer.User.ID)
 
-	return f.process(u.GetType(), session, u)
+	return f.process(session, u)
 }
 
-func (f *Flow) process(t models.UpdateType, session *Session, u models.Update) error {
+func (f *Flow) process(session *Session, u models.Update) error {
 	state := session.GetState()
 
 	step, err := f.findStep(state, u)
