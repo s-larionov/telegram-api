@@ -12,41 +12,49 @@ var (
 	ErrUnableToSetPointer   = errors.New("unable to set pointer")
 )
 
-type State struct {
+type State interface {
+	SetCurrentStep(step StepName)
+	GetCurrentStep() StepName
+	Set(field string, value interface{})
+	Get(field string) (value interface{}, ok bool)
+	Load(field string, element interface{}) error
+}
+
+type state struct {
 	data map[string]interface{}
 	lock sync.RWMutex
 	step StepName
 }
 
-func NewState() *State {
-	return &State{
+func NewState() State {
+	return &state{
 		data: make(map[string]interface{}),
 		step: StepNone,
 	}
 }
 
-func (s *State) SetCurrentStep(step StepName) {
+func (s *state) SetCurrentStep(step StepName) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
 	s.step = step
 }
 
-func (s *State) GetCurrentStep() StepName {
+func (s *state) GetCurrentStep() StepName {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
 
 	return s.step
 }
 
-func (s *State) Set(field string, value interface{}) {
+func (s *state) Set(field string, value interface{}) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
 	s.data[field] = value
 }
 
-func (s *State) Get(field string) (value interface{}, ok bool) {
+func (s *state) Get(field string) (value interface{}, ok bool) {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
 
@@ -55,7 +63,7 @@ func (s *State) Get(field string) (value interface{}, ok bool) {
 	return
 }
 
-func (s *State) Load(field string, element interface{}) error {
+func (s *state) Load(field string, element interface{}) error {
 	s.lock.RLock()
 	value, ok := s.data[field]
 	s.lock.RUnlock()

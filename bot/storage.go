@@ -5,23 +5,23 @@ import (
 )
 
 type Storage interface {
-	Load(userID int64) *Session
-	Store(session *Session)
+	Load(userID int64) Session
+	Store(session Session)
 }
 
 func NewInMemoryStorage() Storage {
 	return &inMemory{
-		storage: make(map[int64]*Session),
+		storage: make(map[int64]Session),
 		lock:    &sync.Mutex{},
 	}
 }
 
 type inMemory struct {
-	storage map[int64]*Session
+	storage map[int64]Session
 	lock    sync.Locker
 }
 
-func (s *inMemory) Load(userID int64) *Session {
+func (s *inMemory) Load(userID int64) Session {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
@@ -37,9 +37,9 @@ func (s *inMemory) Load(userID int64) *Session {
 	return session
 }
 
-func (s *inMemory) Store(session *Session) {
+func (s *inMemory) Store(session Session) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
-	s.storage[session.UserID] = session
+	s.storage[session.GetUserID()] = session
 }

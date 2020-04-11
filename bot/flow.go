@@ -193,7 +193,7 @@ func (f *Flow) OnPollAnswer(u models.Update) error {
 	return f.process(session, u)
 }
 
-func (f *Flow) process(session *Session, u models.Update) error {
+func (f *Flow) process(session Session, u models.Update) error {
 	state := session.GetState()
 
 	step, err := f.findStep(state, u)
@@ -201,7 +201,7 @@ func (f *Flow) process(session *Session, u models.Update) error {
 		return err
 	}
 
-	if state.step != StepNone {
+	if state.GetCurrentStep() != StepNone {
 		finishedStep, err := f.findStepByName(state.GetCurrentStep())
 		if err != nil {
 			return err
@@ -224,7 +224,7 @@ func (f *Flow) process(session *Session, u models.Update) error {
 	return nil
 }
 
-func (f *Flow) findStep(state *State, u models.Update) (Step, error) {
+func (f *Flow) findStep(state State, u models.Update) (Step, error) {
 	f.stepsLock.RLock()
 	defer f.stepsLock.RUnlock()
 
@@ -233,7 +233,7 @@ func (f *Flow) findStep(state *State, u models.Update) (Step, error) {
 			continue
 		}
 
-		if !step.IsAllowedFrom(state.step) {
+		if !step.IsAllowedFrom(state.GetCurrentStep()) {
 			continue
 		}
 

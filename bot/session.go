@@ -4,27 +4,37 @@ import (
 	"sync"
 )
 
-type Session struct {
-	state  *State
-	lock   sync.RWMutex
-	UserID int64
+type Session interface {
+	GetUserID() int64
+	GetState() State
+	UpdateState(state State)
 }
 
-func NewSession(userID int64) *Session {
-	return &Session{
+type session struct {
+	state  State
+	lock   sync.RWMutex
+	userID int64
+}
+
+func NewSession(userID int64) Session {
+	return &session{
 		state:  NewState(),
-		UserID: userID,
+		userID: userID,
 	}
 }
 
-func (s *Session) GetState() *State {
+func (s *session) GetUserID() int64 {
+	return s.userID
+}
+
+func (s *session) GetState() State {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
 
 	return s.state
 }
 
-func (s *Session) UpdateState(state *State) {
+func (s *session) UpdateState(state State) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
