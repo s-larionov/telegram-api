@@ -61,7 +61,10 @@ func (f *Flow) OnMessage(u models.Update) error {
 		"text":       u.Message.Text,
 	}).Trace("incoming message")
 
-	session := f.storage.Load(u.Message.From.ID)
+	session, err := f.storage.Load(u.Message.From.ID)
+	if err != nil {
+		return err
+	}
 
 	return f.process(session, u)
 }
@@ -73,7 +76,10 @@ func (f *Flow) OnMessageEdit(u models.Update) error {
 		"text":       u.EditedMessage.Text,
 	}).Trace("message was edited")
 
-	session := f.storage.Load(u.EditedMessage.From.ID)
+	session, err := f.storage.Load(u.EditedMessage.From.ID)
+	if err != nil {
+		return err
+	}
 
 	return f.process(session, u)
 }
@@ -86,7 +92,10 @@ func (f *Flow) OnChannelPost(u models.Update) error {
 		"text":    u.ChannelPost.Text,
 	}).Trace("incoming post to the channel")
 
-	session := f.storage.Load(u.ChannelPost.From.ID)
+	session, err := f.storage.Load(u.ChannelPost.From.ID)
+	if err != nil {
+		return err
+	}
 
 	return f.process(session, u)
 }
@@ -99,7 +108,10 @@ func (f *Flow) OnChannelPostEdit(u models.Update) error {
 		"text":    u.EditedChannelPost.Text,
 	}).Trace("channel post was updated")
 
-	session := f.storage.Load(u.EditedChannelPost.From.ID)
+	session, err := f.storage.Load(u.EditedChannelPost.From.ID)
+	if err != nil {
+		return err
+	}
 
 	return f.process(session, u)
 }
@@ -111,7 +123,10 @@ func (f *Flow) OnInlineQuery(u models.Update) error {
 		"query":    u.InlineQuery.Query,
 	}).Trace("incoming inline query")
 
-	session := f.storage.Load(u.InlineQuery.From.ID)
+	session, err := f.storage.Load(u.InlineQuery.From.ID)
+	if err != nil {
+		return err
+	}
 
 	return f.process(session, u)
 }
@@ -124,7 +139,10 @@ func (f *Flow) OnChosenInlineResult(u models.Update) error {
 		"result_id":         u.ChosenInlineResult.ID,
 	}).Trace("inline result was chosen")
 
-	session := f.storage.Load(u.ChosenInlineResult.From.ID)
+	session, err := f.storage.Load(u.ChosenInlineResult.From.ID)
+	if err != nil {
+		return err
+	}
 
 	return f.process(session, u)
 }
@@ -138,7 +156,10 @@ func (f *Flow) OnCallbackQuery(u models.Update) error {
 		"query_data":   u.CallbackQuery.Data,
 	}).Trace("incoming callback query")
 
-	session := f.storage.Load(u.CallbackQuery.From.ID)
+	session, err := f.storage.Load(u.CallbackQuery.From.ID)
+	if err != nil {
+		return err
+	}
 
 	return f.process(session, u)
 }
@@ -151,7 +172,10 @@ func (f *Flow) OnShippingQuery(u models.Update) error {
 		"address": u.ShippingQuery.ShippingAddress.String(),
 	}).Trace("incoming shipping query")
 
-	session := f.storage.Load(u.ShippingQuery.From.ID)
+	session, err := f.storage.Load(u.ShippingQuery.From.ID)
+	if err != nil {
+		return err
+	}
 
 	return f.process(session, u)
 }
@@ -165,7 +189,10 @@ func (f *Flow) OnPreCheckoutQuery(u models.Update) error {
 		"currency": u.PreCheckoutQuery.Currency,
 	}).Trace("incoming pre checkout query")
 
-	session := f.storage.Load(u.PreCheckoutQuery.From.ID)
+	session, err := f.storage.Load(u.PreCheckoutQuery.From.ID)
+	if err != nil {
+		return err
+	}
 
 	return f.process(session, u)
 }
@@ -176,7 +203,10 @@ func (f *Flow) OnPoll(u models.Update) error {
 		"poll_type": u.Poll.Type,
 	}).Trace("incoming poll")
 
-	session := f.storage.Load(u.PollAnswer.User.ID)
+	session, err := f.storage.Load(0) // "zero-session" is a system's session
+	if err != nil {
+		return err
+	}
 
 	return f.process(session, u)
 }
@@ -188,7 +218,10 @@ func (f *Flow) OnPollAnswer(u models.Update) error {
 		"option_ids": u.PollAnswer.OptionIDs,
 	}).Trace("incoming poll answer")
 
-	session := f.storage.Load(u.PollAnswer.User.ID)
+	session, err := f.storage.Load(u.PollAnswer.User.ID)
+	if err != nil {
+		return err
+	}
 
 	return f.process(session, u)
 }

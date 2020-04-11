@@ -5,8 +5,8 @@ import (
 )
 
 type Storage interface {
-	Load(userID int64) Session
-	Store(session Session)
+	Load(userID int64) (Session, error)
+	Store(session Session) error
 }
 
 func NewInMemoryStorage() Storage {
@@ -21,25 +21,27 @@ type inMemory struct {
 	lock    sync.Locker
 }
 
-func (s *inMemory) Load(userID int64) Session {
+func (s *inMemory) Load(userID int64) (Session, error) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
 	session, ok := s.storage[userID]
 	if ok {
-		return session
+		return session, nil
 	}
 
 	session = NewSession(userID)
 
 	s.storage[userID] = session
 
-	return session
+	return session, nil
 }
 
-func (s *inMemory) Store(session Session) {
+func (s *inMemory) Store(session Session) error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
 	s.storage[session.GetUserID()] = session
+
+	return nil
 }
