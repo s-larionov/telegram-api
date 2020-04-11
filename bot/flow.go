@@ -254,6 +254,11 @@ func (f *Flow) process(session Session, u models.Update) error {
 		return err
 	}
 
+	err = f.storage.Store(session)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
