@@ -56,7 +56,7 @@ func (b *API) SetWebhook(request models.WebhookRequest) error {
 func (b *API) WebhookHandler(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 
-	log.WithField("body", string(body)).Debug("incoming request")
+	log.WithField("body", string(body)).Trace("incoming request")
 
 	var update models.Update
 	err := json.Unmarshal(body, &update)

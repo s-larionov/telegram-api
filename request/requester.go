@@ -53,7 +53,7 @@ func (r *Requester) JSONRequest(method string, request interface{}) (json.RawMes
 		return nil, err
 	}
 
-	log.WithField("body", string(body)).Debug("request")
+	log.WithField("body", string(body)).Trace("request")
 
 	response, err := r.jsonRequest(url, body)
 	if err != nil {
@@ -66,7 +66,7 @@ func (r *Requester) JSONRequest(method string, request interface{}) (json.RawMes
 		"description": response.Description,
 		"parameters":  response.Parameters,
 		"body":        string(response.Result),
-	}).Debug("response")
+	}).Trace("response")
 
 	return response.Result, nil
 }
