@@ -337,7 +337,7 @@ type VideoMessageRequest struct {
 	Duration int `json:"duration,omitempty"`
 
 	// Video width
-	Width  int `json:"width,omitempty"`
+	Width int `json:"width,omitempty"`
 
 	// Video height
 	Height int `json:"height,omitempty"`
@@ -369,7 +369,7 @@ type AnimationMessageRequest struct {
 	Duration int `json:"duration,omitempty"`
 
 	// Animation width
-	Width  int `json:"width,omitempty"`
+	Width int `json:"width,omitempty"`
 
 	// Animation height
 	Height int `json:"height,omitempty"`
@@ -552,7 +552,7 @@ type PollMessageRequest struct {
 	Options []string `json:"options"`
 
 	// True, if the poll needs to be anonymous, defaults to True
-	IsAnonymous bool `json:"is_anonymous,omitempty"`
+	IsAnonymous bool `json:"is_anonymous"`
 
 	// Poll type, “quiz” or “regular”, defaults to “regular”
 	Type PollType `json:"type,omitempty"`
@@ -584,7 +584,7 @@ type DiceMessageRequest struct {
 	MessageRequestBase
 }
 
-type editMessageRequest struct {
+type EditMessageRequest struct {
 	// Required if inline_message_id is not specified. Unique identifier for the target chat or username of the target
 	// channel (in the format @channelusername)
 	ChatID string `json:"chat_id,omitempty"`
@@ -605,7 +605,7 @@ type editMessageRequest struct {
 
 // Use this entity to edit text and game messages.
 type EditMessageTextRequest struct {
-	editMessageRequest
+	EditMessageRequest
 
 	// New text of the message, 1-4096 characters after entities parsing
 	Text string `json:"text"`
@@ -616,7 +616,7 @@ type EditMessageTextRequest struct {
 
 // Use this entity to edit text and game messages.
 type EditMessageCaptionRequest struct {
-	editMessageRequest
+	EditMessageRequest
 
 	// Optional. New caption of the message, 0-1024 characters after entities parsing
 	Caption string `json:"caption"`
@@ -624,7 +624,7 @@ type EditMessageCaptionRequest struct {
 
 // Use this entity to edit animation, audio, document, photo, or video messages.
 type EditMessageMediaRequest struct {
-	editMessageRequest
+	EditMessageRequest
 
 	// Optional. New caption of the message, 0-1024 characters after entities parsing
 	Media InputMediaInterface `json:"media"`
@@ -632,5 +632,5 @@ type EditMessageMediaRequest struct {
 
 // Use this entity to edit only the reply markup of messages
 type EditMessageReplyMarkupRequest struct {
-	editMessageRequest
+	EditMessageRequest
 }

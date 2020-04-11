@@ -3,7 +3,7 @@ package models
 // This object represents a Telegram user or bot.
 type User struct {
 	// Unique identifier for this user or bot
-	ID int `json:"id"`
+	ID int64 `json:"id"`
 
 	// True, if this user is a bot
 	IsBot bool `json:"is_bot"`

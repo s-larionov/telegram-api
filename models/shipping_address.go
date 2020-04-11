@@ -1,5 +1,10 @@
 package models
 
+import (
+	"fmt"
+	"strings"
+)
+
 // This object represents a shipping address.
 type ShippingAddress struct {
 	// ISO 3166-1 alpha-2 country code
@@ -19,4 +24,18 @@ type ShippingAddress struct {
 
 	// Address post code
 	PostCode string `json:"post_code"`
+}
+
+func (a ShippingAddress) String() string {
+	address := fmt.Sprintf(
+		"%s %s %s, %s\n%s\n%s",
+		a.PostCode,
+		a.CountryCode,
+		a.State,
+		a.City,
+		a.StreetLine1,
+		a.StreetLine2,
+	)
+
+	return strings.TrimSpace(address)
 }
