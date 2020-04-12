@@ -262,12 +262,14 @@ func (f *Flow) process(session Session, u models.Update) error {
 	return nil
 }
 
-func (f *Flow) findStep(state State, u models.Update) (Step, error) {
+func (f *Flow) findStep(session Session, u models.Update) (Step, error) {
 	f.stepsLock.RLock()
 	defer f.stepsLock.RUnlock()
 
+	state := session.GetState()
+
 	for _, step := range f.steps {
-		if !step.Supports(u) {
+		if !step.Supports(session, u) {
 			continue
 		}
 

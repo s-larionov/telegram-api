@@ -18,7 +18,7 @@ type Step interface {
 	DenyFrom(StepName)
 	Process(Session, models.Update) error
 	OnLeave(Session, models.Update) error
-	Supports(models.Update) bool
+	Supports(Session, models.Update) bool
 }
 
 type StepBase struct {
@@ -85,6 +85,6 @@ func (s *StepBase) OnLeave(_ Session, _ models.Update) error {
 	return nil
 }
 
-func (s *StepBase) Supports(_ models.Update) bool {
+func (s *StepBase) Supports(_ Session, _ models.Update) bool {
 	return true
 }
