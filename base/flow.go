@@ -1,4 +1,4 @@
-package bot
+package base
 
 import (
 	"errors"
@@ -229,7 +229,7 @@ func (f *Flow) OnPollAnswer(u models.Update) error {
 func (f *Flow) process(session Session, u models.Update) error {
 	state := session.GetState()
 
-	step, err := f.findStep(state, u)
+	step, err := f.findStep(session, u)
 	if err != nil {
 		return err
 	}
