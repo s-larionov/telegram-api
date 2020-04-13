@@ -2,12 +2,15 @@ package base
 
 import (
 	"errors"
+	"strings"
 	"sync"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/s-larionov/telegram-api/models"
 )
+
+const RestartCommand = "/restart"
 
 var (
 	ErrStepAlreadyExist = errors.New("step already exists in the flow")
@@ -66,7 +69,25 @@ func (f *Flow) OnMessage(u models.Update) error {
 		return err
 	}
 
+	if f.isRestartCommand(u) {
+		return f.restart(session)
+	}
+
 	return f.process(session, u)
+}
+
+func (f *Flow) isRestartCommand(u models.Update) bool {
+	if u.GetType() != models.UpdateTypeMessage {
+		return false
+	}
+
+	command := strings.TrimSpace(u.Message.Text)
+
+	if !strings.EqualFold(command, RestartCommand) {
+		return false
+	}
+
+	return true
 }
 
 func (f *Flow) OnMessageEdit(u models.Update) error {
@@ -249,6 +270,28 @@ func (f *Flow) process(session Session, u models.Update) error {
 
 	state.SetCurrentStep(step.GetName(), u)
 	session.UpdateState(state)
+
+	err = step.Process(session, u)
+	if err != nil {
+		return err
+	}
+
+	err = f.storage.Store(session)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (f *Flow) restart(session Session) error {
+	state := session.GetState()
+
+	stepName, u := state.GetCurrentStep()
+	step, err := f.findStepByName(stepName)
+	if err != nil {
+		return err
+	}
 
 	err = step.Process(session, u)
 	if err != nil {
