@@ -268,11 +268,13 @@ func (f *Flow) process(session Session, u models.Update) error {
 		}
 	}
 
-	state.SetLastStep(step.GetName(), u)
-
-	err = step.Process(session, u)
+	remember, err := step.Process(session, u)
 	if err != nil {
 		return err
+	}
+
+	if remember {
+		state.SetLastStep(step.GetName(), u)
 	}
 
 	err = f.storage.Store(session)
@@ -292,9 +294,13 @@ func (f *Flow) restart(session Session) error {
 		return err
 	}
 
-	err = step.Process(session, u)
+	remember, err := step.Process(session, u)
 	if err != nil {
 		return err
+	}
+
+	if remember {
+		state.SetLastStep(step.GetName(), u)
 	}
 
 	err = f.storage.Store(session)
