@@ -727,7 +727,7 @@ func (b *API) SetMyCommands(request []models.BotCommand) (bool, error) {
 // Use this method to get the current list of the bot's commands. Requires no parameters.
 // Returns Array of BotCommand on success.
 func (b *API) GetMyCommands() ([]models.BotCommand, error) {
-	data, err := b.requester.JSONRequest("setMyCommands", []byte(""))
+	data, err := b.requester.JSONRequest("getMyCommands", []byte(""))
 	if err != nil {
 		return nil, err
 	}
