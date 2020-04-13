@@ -4,6 +4,8 @@ import (
 	"errors"
 	"reflect"
 	"sync"
+
+	"github.com/s-larionov/telegram-api/models"
 )
 
 var (
@@ -13,17 +15,18 @@ var (
 )
 
 type State interface {
-	SetCurrentStep(step StepName)
-	GetCurrentStep() StepName
+	SetCurrentStep(step StepName, u models.Update)
+	GetCurrentStep() (StepName, models.Update)
 	Set(field string, value interface{})
 	Get(field string) (value interface{}, ok bool)
 	Load(field string, element interface{}) error
 }
 
 type state struct {
-	data map[string]interface{}
-	lock sync.RWMutex
-	step StepName
+	data   map[string]interface{}
+	lock   sync.RWMutex
+	step   StepName
+	update models.Update
 }
 
 func NewState() State {
@@ -33,18 +36,19 @@ func NewState() State {
 	}
 }
 
-func (s *state) SetCurrentStep(step StepName) {
+func (s *state) SetCurrentStep(step StepName, u models.Update) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
 	s.step = step
+	s.update = u
 }
 
-func (s *state) GetCurrentStep() StepName {
+func (s *state) GetCurrentStep() (StepName, models.Update) {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
 
-	return s.step
+	return s.step, s.update
 }
 
 func (s *state) Set(field string, value interface{}) {
