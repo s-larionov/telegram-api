@@ -9,15 +9,15 @@ const (
 
 type ReplyMarkupType int
 
-type ReplyMarkupInterface interface {
+type ReplyMarkup interface {
 	GetType() ReplyMarkupType
 }
 
-type ReplyMarkup struct {
+type replyMarkup struct {
 	t ReplyMarkupType
 }
 
-func (m ReplyMarkup) GetType() ReplyMarkupType {
+func (m replyMarkup) GetType() ReplyMarkupType {
 	return m.t
 }
 
@@ -33,7 +33,7 @@ func (m ReplyMarkup) GetType() ReplyMarkupType {
 //   answer option‘, ’Great. Keep adding answer options, then send /done when you‘re ready’.
 // The last option is definitely more attractive. And if you use ForceReply in your bot‘s questions, it will receive the user’s answers even if it only receives replies, commands and mentions — without any extra work for the user.
 type ForceReply struct {
-	ReplyMarkup
+	replyMarkup
 
 	// Shows reply interface to the user, as if they manually selected the bot‘s message and tapped ’Reply'
 	ForceReply bool `json:"force_reply"`
@@ -51,7 +51,7 @@ func NewForceReply(selective ...bool) ForceReply {
 	}
 
 	reply := ForceReply{
-		ReplyMarkup: ReplyMarkup{
+		replyMarkup: replyMarkup{
 			t: ReplyMarkupTypeForceReply,
 		},
 		ForceReply: true,
@@ -66,7 +66,7 @@ func NewForceReply(selective ...bool) ForceReply {
 // An exception is made for one-time keyboards that are hidden immediately after the user presses a button
 // (see ReplyKeyboardMarkup).
 type ReplyKeyboardRemove struct {
-	ReplyMarkup
+	replyMarkup
 
 	// Requests clients to remove the custom keyboard (user will not be able to summon this keyboard;
 	// if you want to hide the keyboard from sight but keep it accessible, use one_time_keyboard in ReplyKeyboardMarkup)
@@ -88,7 +88,7 @@ func NewKeyboardRemoveReply(selective ...bool) ReplyKeyboardRemove {
 	}
 
 	reply := ReplyKeyboardRemove{
-		ReplyMarkup: ReplyMarkup{
+		replyMarkup: replyMarkup{
 			t: ReplyMarkupTypeRemoveKeyboard,
 		},
 		RemoveKeyboard: true,
@@ -100,7 +100,7 @@ func NewKeyboardRemoveReply(selective ...bool) ReplyKeyboardRemove {
 
 // This object represents a custom keyboard with reply options (see Introduction to bots for details and examples).
 type ReplyKeyboardMarkup struct {
-	ReplyMarkup
+	replyMarkup
 
 	// Array of button rows, each represented by an Array of KeyboardButton objects
 	Keyboard [][]KeyboardButton `json:"keyboard"`
@@ -131,7 +131,7 @@ func NewKeyboardMarkupReply(keyboard [][]KeyboardButton, resize, oneTime bool, s
 	}
 
 	reply := ReplyKeyboardMarkup{
-		ReplyMarkup: ReplyMarkup{
+		replyMarkup: replyMarkup{
 			t: ReplyMarkupTypeKeyboardMarkup,
 		},
 		Keyboard:        keyboard,
@@ -148,7 +148,7 @@ func NewKeyboardMarkupReply(keyboard [][]KeyboardButton, resize, oneTime bool, s
 // Note: This will only work in Telegram versions released after 9 April, 2016. Older clients
 //       will display unsupported message.
 type InlineKeyboardMarkup struct {
-	ReplyMarkup
+	replyMarkup
 
 	// Array of button rows, each represented by an Array of InlineKeyboardButton objects
 	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"`
@@ -156,7 +156,7 @@ type InlineKeyboardMarkup struct {
 
 func NewInlineKeyboardMarkupReply(keyboard [][]InlineKeyboardButton) InlineKeyboardMarkup {
 	reply := InlineKeyboardMarkup{
-		ReplyMarkup: ReplyMarkup{
+		replyMarkup: replyMarkup{
 			t: ReplyMarkupTypeInlineKeyboardMarkup,
 		},
 		InlineKeyboard: keyboard,

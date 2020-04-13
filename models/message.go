@@ -244,7 +244,7 @@ type MessageRequestBase struct {
 	// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard,
 	// instructions to remove reply keyboard or to force a reply from the user.
 	// Can be one of types: InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
-	ReplyMarkup ReplyMarkupInterface `json:"reply_markup,omitempty"`
+	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
 // Use this entity to send text messages.
@@ -479,7 +479,7 @@ type EditMessageLiveLocation struct {
 	// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard,
 	// instructions to remove reply keyboard or to force a reply from the user.
 	// Can be one of types: InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
-	ReplyMarkup ReplyMarkupInterface `json:"reply_markup,omitempty"`
+	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
 // Use this entity to edit live location messages. A location can be edited until its live_period expires
@@ -497,7 +497,7 @@ type StopMessageLiveLocation struct {
 	// Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard,
 	// instructions to remove reply keyboard or to force a reply from the user.
 	// Can be one of types: InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
-	ReplyMarkup ReplyMarkupInterface `json:"reply_markup,omitempty"`
+	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
 // Use this entity to send information about a venue.
@@ -576,7 +576,7 @@ type StopPollRequest struct {
 	MessageID int64 `json:"message_id"`
 
 	// Optional. A JSON-serialized object for a new message inline keyboard.
-	ReplyMarkup ReplyMarkupInterface `json:"reply_markup,omitempty"`
+	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
 // Use this entity to send a dice, which will have a random value from 1 to 6.
@@ -600,7 +600,7 @@ type EditMessageRequest struct {
 	ParseMode ParseMode `json:"parse_mode,omitempty"`
 
 	// A JSON-serialized object for an inline keyboard.
-	ReplyMarkup ReplyMarkupInterface `json:"reply_markup,omitempty"`
+	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
 // Use this entity to edit text and game messages.
