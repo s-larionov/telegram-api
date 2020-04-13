@@ -14,8 +14,8 @@ type StepName string
 type Step interface {
 	GetName() StepName
 	IsAllowedFrom(StepName) bool
-	AllowFrom(StepName)
-	DenyFrom(StepName)
+	AllowFrom(...StepName)
+	DenyFrom(...StepName)
 	Process(Session, models.Update) error
 	OnLeave(Session, models.Update) error
 	Supports(Session, models.Update) bool
@@ -63,18 +63,18 @@ func (s *StepBase) IsAllowedFrom(step StepName) bool {
 	return false
 }
 
-func (s *StepBase) AllowFrom(step StepName) {
+func (s *StepBase) AllowFrom(step ...StepName) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
-	s.allowed = append(s.allowed, step)
+	s.allowed = append(s.allowed, step...)
 }
 
-func (s *StepBase) DenyFrom(step StepName) {
+func (s *StepBase) DenyFrom(step ...StepName) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
-	s.denied = append(s.denied, step)
+	s.denied = append(s.denied, step...)
 }
 
 func (s *StepBase) Process(_ Session, _ models.Update) error {
