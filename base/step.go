@@ -16,7 +16,7 @@ type Step interface {
 	IsAllowedFrom(StepName) bool
 	AllowFrom(...StepName)
 	DenyFrom(...StepName)
-	Process(Session, models.Update) error
+	Process(Session, models.Update) (remember bool, err error)
 	OnLeave(Session, models.Update) error
 	Supports(Session, models.Update) bool
 }
@@ -77,8 +77,8 @@ func (s *StepBase) DenyFrom(step ...StepName) {
 	s.denied = append(s.denied, step...)
 }
 
-func (s *StepBase) Process(_ Session, _ models.Update) error {
-	return nil
+func (s *StepBase) Process(_ Session, _ models.Update) (remember bool, err error) {
+	return false, nil
 }
 
 func (s *StepBase) OnLeave(_ Session, _ models.Update) error {

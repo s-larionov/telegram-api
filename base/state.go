@@ -15,8 +15,8 @@ var (
 )
 
 type State interface {
-	SetCurrentStep(step StepName, u models.Update)
-	GetCurrentStep() (StepName, models.Update)
+	SetLastStep(step StepName, u models.Update)
+	GetLastStep() (StepName, models.Update)
 	Set(field string, value interface{})
 	Get(field string) (value interface{}, ok bool)
 	Load(field string, element interface{}) error
@@ -36,7 +36,7 @@ func NewState() State {
 	}
 }
 
-func (s *state) SetCurrentStep(step StepName, u models.Update) {
+func (s *state) SetLastStep(step StepName, u models.Update) {
 	s.lock.Lock()
 	defer s.lock.Unlock()
 
@@ -44,7 +44,7 @@ func (s *state) SetCurrentStep(step StepName, u models.Update) {
 	s.update = u
 }
 
-func (s *state) GetCurrentStep() (StepName, models.Update) {
+func (s *state) GetLastStep() (StepName, models.Update) {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
 

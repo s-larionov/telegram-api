@@ -255,7 +255,7 @@ func (f *Flow) process(session Session, u models.Update) error {
 		return err
 	}
 
-	currentStep, _ := state.GetCurrentStep()
+	currentStep, _ := state.GetLastStep()
 	if currentStep != StepNone {
 		finishedStep, err := f.findStepByName(currentStep)
 		if err != nil {
@@ -268,8 +268,7 @@ func (f *Flow) process(session Session, u models.Update) error {
 		}
 	}
 
-	state.SetCurrentStep(step.GetName(), u)
-	session.UpdateState(state)
+	state.SetLastStep(step.GetName(), u)
 
 	err = step.Process(session, u)
 	if err != nil {
@@ -287,7 +286,7 @@ func (f *Flow) process(session Session, u models.Update) error {
 func (f *Flow) restart(session Session) error {
 	state := session.GetState()
 
-	stepName, u := state.GetCurrentStep()
+	stepName, u := state.GetLastStep()
 	step, err := f.findStepByName(stepName)
 	if err != nil {
 		return err
@@ -310,7 +309,7 @@ func (f *Flow) findStep(session Session, u models.Update) (Step, error) {
 	f.stepsLock.RLock()
 	defer f.stepsLock.RUnlock()
 
-	currentStep, _ := session.GetState().GetCurrentStep()
+	currentStep, _ := session.GetState().GetLastStep()
 
 	for _, step := range f.steps {
 		if !step.Supports(session, u) {
