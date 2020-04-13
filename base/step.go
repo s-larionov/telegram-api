@@ -7,7 +7,12 @@ import (
 	"github.com/s-larionov/telegram-api/models"
 )
 
-const StepNone StepName = ""
+const (
+	StepNone StepName = ""
+
+	ResultActionSkipState ResultAction = 1 << iota
+	ResultActionRestart
+)
 
 type StepName string
 
@@ -16,9 +21,38 @@ type Step interface {
 	IsAllowedFrom(StepName) bool
 	AllowFrom(...StepName)
 	DenyFrom(...StepName)
-	Process(Session, models.Update) (remember bool, err error)
+	Process(Session, models.Update) StepResult
 	OnLeave(Session, models.Update) error
 	Supports(Session, models.Update) bool
+}
+
+type ResultAction uint16
+
+func (ResultAction) Combine(action ...ResultAction) ResultAction {
+	var res ResultAction
+
+	for _, a := range action {
+		res = res.Set(a)
+	}
+
+	return res
+}
+
+func (a ResultAction) Set(action ResultAction) ResultAction    { return a | action }
+func (a ResultAction) Clear(action ResultAction) ResultAction  { return a &^ action }
+func (a ResultAction) Toggle(action ResultAction) ResultAction { return a ^ action }
+func (a ResultAction) Has(action ResultAction) bool            { return a&action != 0 }
+
+type StepResult struct {
+	Error  error
+	Action ResultAction
+}
+
+func NewStepResult(err error, action ...ResultAction) StepResult {
+	return StepResult{
+		Error:  err,
+		Action: ResultAction(0).Combine(action...),
+	}
 }
 
 type StepBase struct {
@@ -77,8 +111,8 @@ func (s *StepBase) DenyFrom(step ...StepName) {
 	s.denied = append(s.denied, step...)
 }
 
-func (s *StepBase) Process(_ Session, _ models.Update) (remember bool, err error) {
-	return false, nil
+func (s *StepBase) Process(_ Session, _ models.Update) StepResult {
+	return NewStepResult(nil)
 }
 
 func (s *StepBase) OnLeave(_ Session, _ models.Update) error {

@@ -70,10 +70,10 @@ func (f *Flow) OnMessage(u models.Update) error {
 	}
 
 	if f.isRestartCommand(u) {
-		return f.restart(session)
+		return f.Restart(session)
 	}
 
-	return f.process(session, u)
+	return f.Process(session, u)
 }
 
 func (f *Flow) isRestartCommand(u models.Update) bool {
@@ -102,7 +102,7 @@ func (f *Flow) OnMessageEdit(u models.Update) error {
 		return err
 	}
 
-	return f.process(session, u)
+	return f.Process(session, u)
 }
 
 func (f *Flow) OnChannelPost(u models.Update) error {
@@ -118,7 +118,7 @@ func (f *Flow) OnChannelPost(u models.Update) error {
 		return err
 	}
 
-	return f.process(session, u)
+	return f.Process(session, u)
 }
 
 func (f *Flow) OnChannelPostEdit(u models.Update) error {
@@ -134,7 +134,7 @@ func (f *Flow) OnChannelPostEdit(u models.Update) error {
 		return err
 	}
 
-	return f.process(session, u)
+	return f.Process(session, u)
 }
 
 func (f *Flow) OnInlineQuery(u models.Update) error {
@@ -149,7 +149,7 @@ func (f *Flow) OnInlineQuery(u models.Update) error {
 		return err
 	}
 
-	return f.process(session, u)
+	return f.Process(session, u)
 }
 
 func (f *Flow) OnChosenInlineResult(u models.Update) error {
@@ -165,7 +165,7 @@ func (f *Flow) OnChosenInlineResult(u models.Update) error {
 		return err
 	}
 
-	return f.process(session, u)
+	return f.Process(session, u)
 }
 
 func (f *Flow) OnCallbackQuery(u models.Update) error {
@@ -182,7 +182,7 @@ func (f *Flow) OnCallbackQuery(u models.Update) error {
 		return err
 	}
 
-	return f.process(session, u)
+	return f.Process(session, u)
 }
 
 func (f *Flow) OnShippingQuery(u models.Update) error {
@@ -198,7 +198,7 @@ func (f *Flow) OnShippingQuery(u models.Update) error {
 		return err
 	}
 
-	return f.process(session, u)
+	return f.Process(session, u)
 }
 
 func (f *Flow) OnPreCheckoutQuery(u models.Update) error {
@@ -215,7 +215,7 @@ func (f *Flow) OnPreCheckoutQuery(u models.Update) error {
 		return err
 	}
 
-	return f.process(session, u)
+	return f.Process(session, u)
 }
 
 func (f *Flow) OnPoll(u models.Update) error {
@@ -229,7 +229,7 @@ func (f *Flow) OnPoll(u models.Update) error {
 		return err
 	}
 
-	return f.process(session, u)
+	return f.Process(session, u)
 }
 
 func (f *Flow) OnPollAnswer(u models.Update) error {
@@ -244,10 +244,10 @@ func (f *Flow) OnPollAnswer(u models.Update) error {
 		return err
 	}
 
-	return f.process(session, u)
+	return f.Process(session, u)
 }
 
-func (f *Flow) process(session Session, u models.Update) error {
+func (f *Flow) Process(session Session, u models.Update) error {
 	state := session.GetState()
 
 	step, err := f.findStep(session, u)
@@ -268,13 +268,9 @@ func (f *Flow) process(session Session, u models.Update) error {
 		}
 	}
 
-	remember, err := step.Process(session, u)
+	err = f.process(step, session, u)
 	if err != nil {
 		return err
-	}
-
-	if remember {
-		state.SetLastStep(step.GetName(), u)
 	}
 
 	err = f.storage.Store(session)
@@ -285,7 +281,24 @@ func (f *Flow) process(session Session, u models.Update) error {
 	return nil
 }
 
-func (f *Flow) restart(session Session) error {
+func (f *Flow) process(step Step, session Session, u models.Update) error {
+	result := step.Process(session, u)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if !result.Action.Has(ResultActionSkipState) {
+		session.GetState().SetLastStep(step.GetName(), u)
+	}
+
+	if result.Action.Has(ResultActionRestart) {
+		return f.Restart(session)
+	}
+
+	return nil
+}
+
+func (f *Flow) Restart(session Session) error {
 	state := session.GetState()
 
 	stepName, u := state.GetLastStep()
@@ -294,13 +307,9 @@ func (f *Flow) restart(session Session) error {
 		return err
 	}
 
-	remember, err := step.Process(session, u)
+	err = f.process(step, session, u)
 	if err != nil {
 		return err
-	}
-
-	if remember {
-		state.SetLastStep(step.GetName(), u)
 	}
 
 	err = f.storage.Store(session)
