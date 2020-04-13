@@ -143,6 +143,20 @@ func NewKeyboardMarkupReply(keyboard [][]KeyboardButton, resize, oneTime bool, s
 	return reply
 }
 
+func DistributeKeyboardRows(buttons []KeyboardButton, columns int) [][]KeyboardButton {
+	var keyboard [][]KeyboardButton
+
+	for i := 0; i < len(buttons); i += columns {
+		if (i + 2) >= len(buttons) {
+			keyboard = append(keyboard, buttons[i:])
+		} else {
+			keyboard = append(keyboard, buttons[i:i+columns])
+		}
+	}
+
+	return keyboard
+}
+
 // This object represents an inline keyboard that appears right next to the message it belongs to.
 //
 // Note: This will only work in Telegram versions released after 9 April, 2016. Older clients
@@ -163,4 +177,18 @@ func NewInlineKeyboardMarkupReply(keyboard [][]InlineKeyboardButton) InlineKeybo
 	}
 
 	return reply
+}
+
+func DistributeInlineKeyboardRows(buttons []InlineKeyboardButton, columns int) [][]InlineKeyboardButton {
+	var keyboard [][]InlineKeyboardButton
+
+	for i := 0; i < len(buttons); i += columns {
+		if (i + 2) >= len(buttons) {
+			keyboard = append(keyboard, buttons[i:])
+		} else {
+			keyboard = append(keyboard, buttons[i:i+columns])
+		}
+	}
+
+	return keyboard
 }
