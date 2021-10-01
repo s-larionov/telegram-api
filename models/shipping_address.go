@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// This object represents a shipping address.
+// ShippingAddress This object represents a shipping address.
 type ShippingAddress struct {
 	// ISO 3166-1 alpha-2 country code
 	CountryCode string `json:"country_code"`

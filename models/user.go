@@ -1,6 +1,6 @@
 package models
 
-// This object represents a Telegram user or bot.
+// User This object represents a Telegram user or bot.
 type User struct {
 	// Unique identifier for this user or bot
 	ID int64 `json:"id"`
@@ -30,7 +30,7 @@ type User struct {
 	SupportsInlineQueries bool `json:"supports_inline_queries,omitempty"`
 }
 
-// This object represent a user's profile pictures.
+// UserProfilePhotos This object represent a user's profile pictures.
 type UserProfilePhotos struct {
 	// Total number of profile pictures the target user has
 	TotalCount int `json:"total_count"`
@@ -39,7 +39,7 @@ type UserProfilePhotos struct {
 	Photos [][]*PhotoSize `json:"photos"`
 }
 
-// Use this entity to get a list of profile pictures for a user.
+// UserProfilePhotosRequest Use this entity to get a list of profile pictures for a user.
 type UserProfilePhotosRequest struct {
 	// Unique identifier of the target user
 	UserID int64 `json:"user_id"`

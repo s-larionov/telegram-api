@@ -1,6 +1,6 @@
 package models
 
-// This object represents information about an order.
+// OrderInfo This object represents information about an order.
 type OrderInfo struct {
 	// Optional. User name
 	Name string `json:"name,omitempty"`

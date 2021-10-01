@@ -1,6 +1,6 @@
 package models
 
-// This object contains information about an incoming pre-checkout query.
+// PreCheckoutQuery This object contains information about an incoming pre-checkout query.
 type PreCheckoutQuery struct {
 	// Unique query identifier
 	ID string `json:"id"`

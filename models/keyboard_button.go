@@ -1,6 +1,6 @@
 package models
 
-// This object represents one button of the reply keyboard. For simple text buttons String can be used instead
+// KeyboardButton This object represents one button of the reply keyboard. For simple text buttons String can be used instead
 // of this object to specify text of the button. Optional fields request_contact, request_location,
 // and request_poll are mutually exclusive.
 //
@@ -37,7 +37,7 @@ func NewKeyboardButton(text string, contact, location bool, poll *KeyboardButton
 	return button
 }
 
-// This object represents type of a poll, which is allowed to be created and sent when the corresponding
+// KeyboardButtonPollType This object represents type of a poll, which is allowed to be created and sent when the corresponding
 // button is pressed.
 type KeyboardButtonPollType struct {
 	// Optional. If quiz is passed, the user will be allowed to create only polls in the quiz mode. If regular is passed,

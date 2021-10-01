@@ -24,7 +24,7 @@ func (t inputMedia) GetType() InputMediaType {
 	return t.Type
 }
 
-// Represents a photo to be sent.
+// InputMediaPhoto Represents a photo to be sent.
 type InputMediaPhoto struct {
 	inputMedia
 
@@ -42,7 +42,7 @@ type InputMediaPhoto struct {
 	ParseMode ParseMode `json:"parse_mode,omitempty"`
 }
 
-// Represents a video to be sent.
+// InputMediaVideo Represents a video to be sent.
 type InputMediaVideo struct {
 	// File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended),
 	// pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>”
@@ -78,7 +78,7 @@ type InputMediaVideo struct {
 	SupportsStreaming bool `json:"supports_streaming,omitempty"`
 }
 
-// Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.
+// InputMediaAnimation Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.
 type InputMediaAnimation struct {
 	inputMedia
 
@@ -113,7 +113,7 @@ type InputMediaAnimation struct {
 	DurationInSeconds int `json:"duration,omitempty"`
 }
 
-// Represents an audio file to be treated as music to be sent.
+// InputMediaAudio Represents an audio file to be treated as music to be sent.
 type InputMediaAudio struct {
 	inputMedia
 
@@ -148,7 +148,7 @@ type InputMediaAudio struct {
 	Title string `json:"title,omitempty"`
 }
 
-// Represents a general file to be sent.
+// InputMediaDocument Represents a general file to be sent.
 type InputMediaDocument struct {
 	inputMedia
 

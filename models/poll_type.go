@@ -5,5 +5,5 @@ const (
 	PollTypeQuiz    PollType = "quiz"
 )
 
-// Poll type, currently can be “regular” or “quiz”
+// PollType Poll type, currently can be “regular” or “quiz”
 type PollType string

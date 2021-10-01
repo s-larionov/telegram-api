@@ -1,39 +1,39 @@
 package models
 
 const (
-	// New incoming message of any kind — text, photo, sticker, etc.
+	// UpdateTypeMessage New incoming message of any kind — text, photo, sticker, etc.
 	UpdateTypeMessage UpdateType = "message"
 
-	// New version of a message that is known to the bot and was edited
+	// UpdateTypeEditedMessage New version of a message that is known to the bot and was edited
 	UpdateTypeEditedMessage UpdateType = "edited_message"
 
-	// New incoming channel post of any kind — text, photo, sticker, etc.
+	// UpdateTypeChannelPost New incoming channel post of any kind — text, photo, sticker, etc.
 	UpdateTypeChannelPost UpdateType = "channel_post"
 
-	// New version of a channel post that is known to the bot and was edited
+	// UpdateTypeEditedChannelPost New version of a channel post that is known to the bot and was edited
 	UpdateTypeEditedChannelPost UpdateType = "edited_channel_post"
 
-	// New incoming inline query
+	// UpdateTypeInlineQuery New incoming inline query
 	UpdateTypeInlineQuery UpdateType = "inline_query"
 
-	// The result of an inline query that was chosen by a user and sent to their chat partner. Please see our
+	// UpdateTypeChosenInlineResult The result of an inline query that was chosen by a user and sent to their chat partner. Please see our
 	// documentation on the [feedback collecting](https://core.telegram.org/bots/inline#collecting-feedback) for details
 	// on how to enable these updates for your bot.
 	UpdateTypeChosenInlineResult UpdateType = "chosen_inline_result"
 
-	// New incoming callback query
+	// UpdateTypeCallbackQuery New incoming callback query
 	UpdateTypeCallbackQuery UpdateType = "callback_query"
 
-	// New incoming shipping query. Only for invoices with flexible price
+	// UpdateTypeShippingQuery New incoming shipping query. Only for invoices with flexible price
 	UpdateTypeShippingQuery UpdateType = "shipping_query"
 
-	// New incoming pre-checkout query. Contains full information about checkout
+	// UpdateTypePreCheckoutQuery New incoming pre-checkout query. Contains full information about checkout
 	UpdateTypePreCheckoutQuery UpdateType = "pre_checkout_query"
 
-	// New poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot
+	// UpdateTypePoll New poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot
 	UpdateTypePoll UpdateType = "poll"
 
-	// A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.
+	// UpdateTypePollAnswer A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.
 	UpdateTypePollAnswer UpdateType = "poll_answer"
 )
 
@@ -63,7 +63,7 @@ type UpdateRequest struct {
 	AllowedUpdates []UpdateType `json:"allowed_updates,omitempty"`
 }
 
-// This object represents an incoming update.
+// Update This object represents an incoming update.
 // At most one of the optional parameters can be present in any given update.
 type Update struct {
 	// The update‘s unique identifier. Update identifiers start from a certain positive number and increase sequentially.

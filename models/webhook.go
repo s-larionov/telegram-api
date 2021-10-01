@@ -1,6 +1,6 @@
 package models
 
-// Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update
+// WebhookRequest Use this method to specify a url and receive incoming updates via an outgoing webhook. Whenever there is an update
 // for the bot, we will send an HTTPS POST request to the specified url, containing a JSON-serialized Update.
 // In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns True on success.
 //
@@ -29,7 +29,7 @@ type WebhookRequest struct {
 	AllowedUpdates []UpdateType `json:"allowed_updates,omitempty"`
 }
 
-// Contains information about the current status of a webhook.
+// WebhookInfo Contains information about the current status of a webhook.
 type WebhookInfo struct {
 	// Webhook URL, may be empty if webhook is not set up
 	URL string `json:"url,omitempty"`

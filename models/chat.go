@@ -28,13 +28,13 @@ const (
 // ChatType of chat, can be either “private”, “group”, “supergroup” or “channel”
 type ChatType string
 
-// The member's status in the chat.
+// ChatMemberStatus The member's status in the chat.
 // Can be “creator”, “administrator”, “member”, “restricted”, “left” or “kicked”
 type ChatMemberStatus string
 
 type ChatAction string
 
-// This object represents a chat.
+// Chat This object represents a chat.
 type Chat struct {
 	// Unique identifier for this chat.
 	// This number may be greater than 32 bits and some programming languages may have difficulty/silent defects
@@ -91,7 +91,7 @@ type Chat struct {
 	CanSetStickerSet bool `json:"can_set_sticker_set,omitempty"`
 }
 
-// Describes actions that a non-administrator user is allowed to take in a chat.
+// ChatPermissions Describes actions that a non-administrator user is allowed to take in a chat.
 type ChatPermissions struct {
 	// Optional. True, if the user is allowed to send text messages, contacts, locations and venues
 	CanSendMessages bool `json:"can_send_messages"`
@@ -121,7 +121,7 @@ type ChatPermissions struct {
 	CanPinMessages bool `json:"can_pin_messages,omitempty"`
 }
 
-// This object represents a chat photo.
+// ChatPhoto This object represents a chat photo.
 type ChatPhoto struct {
 	// File identifier of small (160x160) chat photo. This file_id can be used only for photo download
 	// and only for as long as the photo is not changed.
@@ -140,7 +140,7 @@ type ChatPhoto struct {
 	BigFileUniqueID string `json:"big_file_unique_id"`
 }
 
-// This object contains information about one member of a chat.
+// ChatMember This object contains information about one member of a chat.
 type ChatMember struct {
 	// Information about the user
 	User *User `json:"user"`
@@ -206,7 +206,7 @@ type ChatMember struct {
 	CanAddWebPagePreviews bool `json:"can_add_web_page_previews,omitempty"`
 }
 
-// Use this entity to restrict a user in a supergroup.
+// ChatMemberRestrictionsRequest Use this entity to restrict a user in a supergroup.
 type ChatMemberRestrictionsRequest struct {
 	// Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
 	ChatID string `json:"chat_id"`
@@ -222,7 +222,7 @@ type ChatMemberRestrictionsRequest struct {
 	UntilTimestamp int64 `json:"until_date,omitempty"`
 }
 
-// Use this entity to promote or demote a user in a supergroup or a channel
+// ChatMemberPromotionRequest Use this entity to promote or demote a user in a supergroup or a channel
 type ChatMemberPromotionRequest struct {
 	// Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
 	ChatID string `json:"chat_id"`
@@ -257,11 +257,11 @@ type ChatMemberPromotionRequest struct {
 	CanPromoteMembers bool `json:"can_promote_members,omitempty"`
 }
 
-// Use this entity to set a new profile photo for the chat.
+// ChatSetPhotoRequest Use this entity to set a new profile photo for the chat.
 type ChatSetPhotoRequest struct {
 	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
-	ChatID string    `json:"chat_id"`
+	ChatID string `json:"chat_id"`
 
 	// New chat photo, uploaded using multipart/form-data
-	Photo  InputFile `json:"photo"`
+	Photo InputFile `json:"photo"`
 }

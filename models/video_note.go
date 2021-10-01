@@ -1,6 +1,6 @@
 package models
 
-// This object represents a video message (available in Telegram apps as of v.4.0).
+// VideoNote This object represents a video message (available in Telegram apps as of v.4.0).
 type VideoNote struct {
 	// Identifier for this file, which can be used to download or reuse the file
 	FileID string `json:"file_id"`

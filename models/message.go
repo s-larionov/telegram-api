@@ -18,10 +18,10 @@ const (
 	MessageEntityTypeTextMention   MessageEntityType = "text_mention"  // for users without usernames
 )
 
-// Type of the message entity.
+// MessageEntityType Type of the message entity.
 type MessageEntityType string
 
-// This object represents a message.
+// Message This object represents a message.
 type Message struct {
 	// Unique message identifier inside this chat
 	ID int64 `json:"message_id"`
@@ -189,7 +189,7 @@ type Message struct {
 	ReplyMarkup *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 
-// This object represents one special entity in a text message. For example, hashtags, usernames, URLs, etc.
+// MessageEntity This object represents one special entity in a text message. For example, hashtags, usernames, URLs, etc.
 type MessageEntity struct {
 	// Type of the entity.
 	Type MessageEntityType `json:"type"`
@@ -210,7 +210,7 @@ type MessageEntity struct {
 	Language string `json:"language,omitempty"`
 }
 
-// Use this entity to forward messages of any kind.
+// ForwardMessageRequest Use this entity to forward messages of any kind.
 type ForwardMessageRequest struct {
 	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 	ChatID string `json:"chat_id"`
@@ -226,7 +226,7 @@ type ForwardMessageRequest struct {
 	DisableNotification bool `json:"disable_notification,omitempty"`
 }
 
-// Use this entity to send text messages.
+// MessageRequestBase Use this entity to send text messages.
 type MessageRequestBase struct {
 	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 	ChatID string `json:"chat_id"`
@@ -247,7 +247,7 @@ type MessageRequestBase struct {
 	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
-// Use this entity to send text messages.
+// MessageRequest Use this entity to send text messages.
 type MessageRequest struct {
 	MessageRequestBase
 
@@ -258,7 +258,7 @@ type MessageRequest struct {
 	DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
 }
 
-// Use this entity to send photos
+// PhotoMessageRequest Use this entity to send photos
 type PhotoMessageRequest struct {
 	MessageRequestBase
 
@@ -271,7 +271,7 @@ type PhotoMessageRequest struct {
 	Caption string `json:"caption,omitempty"`
 }
 
-// Use this entity to send audio files, if you want Telegram clients to display them in the music player.
+// AudioMessageRequest Use this entity to send audio files, if you want Telegram clients to display them in the music player.
 // Your audio must be in the .MP3 or .M4A format.
 type AudioMessageRequest struct {
 	MessageRequestBase
@@ -301,7 +301,7 @@ type AudioMessageRequest struct {
 	Thumb InputFile `json:"thumb,omitempty"`
 }
 
-// Use this entity to send general files.
+// DocumentMessageRequest Use this entity to send general files.
 type DocumentMessageRequest struct {
 	MessageRequestBase
 
@@ -321,7 +321,7 @@ type DocumentMessageRequest struct {
 	Thumb InputFile `json:"thumb,omitempty"`
 }
 
-// Use this entity to send video files.
+// VideoMessageRequest Use this entity to send video files.
 type VideoMessageRequest struct {
 	MessageRequestBase
 
@@ -353,7 +353,7 @@ type VideoMessageRequest struct {
 	SupportsStreaming bool `json:"supports_streaming,omitempty"`
 }
 
-// Use this entity to send animation files (GIF or H.264/MPEG-4 AVC video without sound).
+// AnimationMessageRequest Use this entity to send animation files (GIF or H.264/MPEG-4 AVC video without sound).
 type AnimationMessageRequest struct {
 	MessageRequestBase
 
@@ -382,7 +382,7 @@ type AnimationMessageRequest struct {
 	Thumb InputFile `json:"thumb,omitempty"`
 }
 
-// As of v.4.0, Telegram clients support rounded square mp4 videos of up to 1 minute long.
+// VideoNoteMessageRequest As of v.4.0, Telegram clients support rounded square mp4 videos of up to 1 minute long.
 // Use this entity to send video messages.
 type VideoNoteMessageRequest struct {
 	MessageRequestBase
@@ -409,7 +409,7 @@ type VideoNoteMessageRequest struct {
 	Thumb InputFile `json:"thumb,omitempty"`
 }
 
-// Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message.
+// VoiceMessageRequest Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message.
 // For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as Audio
 // or Document)
 type VoiceMessageRequest struct {
@@ -427,7 +427,7 @@ type VoiceMessageRequest struct {
 	Duration int `json:"duration,omitempty"`
 }
 
-// Use this entity to send a group of photos or videos as an album.
+// MediaGroupMessageRequest Use this entity to send a group of photos or videos as an album.
 type MediaGroupMessageRequest struct {
 	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 	ChatID string `json:"chat_id"`
@@ -443,7 +443,7 @@ type MediaGroupMessageRequest struct {
 	DisableNotification bool `json:"disable_notification,omitempty"`
 }
 
-// Use this entity to send point on the map.
+// LocationMessageRequest Use this entity to send point on the map.
 type LocationMessageRequest struct {
 	MessageRequestBase
 
@@ -458,7 +458,7 @@ type LocationMessageRequest struct {
 	LivePeriod int32 `json:"live_period,omitempty"`
 }
 
-// Use this entity to edit live location messages. A location can be edited until its live_period expires
+// EditMessageLiveLocation Use this entity to edit live location messages. A location can be edited until its live_period expires
 // or editing is explicitly disabled by a call to stopMessageLiveLocation.
 type EditMessageLiveLocation struct {
 	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
@@ -482,7 +482,7 @@ type EditMessageLiveLocation struct {
 	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
-// Use this entity to edit live location messages. A location can be edited until its live_period expires
+// StopMessageLiveLocation Use this entity to edit live location messages. A location can be edited until its live_period expires
 // or editing is explicitly disabled by a call to stopMessageLiveLocation.
 type StopMessageLiveLocation struct {
 	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
@@ -500,7 +500,7 @@ type StopMessageLiveLocation struct {
 	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
-// Use this entity to send information about a venue.
+// VenueMessageRequest Use this entity to send information about a venue.
 type VenueMessageRequest struct {
 	MessageRequestBase
 
@@ -524,7 +524,7 @@ type VenueMessageRequest struct {
 	FoursquareType string `json:"foursquare_type,omitempty"`
 }
 
-// Use this entity to send phone contacts.
+// ContactMessageRequest Use this entity to send phone contacts.
 type ContactMessageRequest struct {
 	MessageRequestBase
 
@@ -541,7 +541,7 @@ type ContactMessageRequest struct {
 	VCard string `json:"vcard,omitempty"`
 }
 
-// Use this entity to send a native poll.
+// PollMessageRequest Use this entity to send a native poll.
 type PollMessageRequest struct {
 	MessageRequestBase
 
@@ -567,7 +567,7 @@ type PollMessageRequest struct {
 	IsClosed bool `json:"is_closed,omitempty"`
 }
 
-// Use this entity to stop a poll which was sent by the bot.
+// StopPollRequest Use this entity to stop a poll which was sent by the bot.
 type StopPollRequest struct {
 	// Unique identifier for the target chat or username of the target channel (in the format @channelusername)
 	ChatID string `json:"chat_id"`
@@ -579,7 +579,7 @@ type StopPollRequest struct {
 	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
-// Use this entity to send a dice, which will have a random value from 1 to 6.
+// DiceMessageRequest Use this entity to send a dice, which will have a random value from 1 to 6.
 type DiceMessageRequest struct {
 	MessageRequestBase
 }
@@ -603,7 +603,7 @@ type EditMessageRequest struct {
 	ReplyMarkup ReplyMarkup `json:"reply_markup,omitempty"`
 }
 
-// Use this entity to edit text and game messages.
+// EditMessageTextRequest Use this entity to edit text and game messages.
 type EditMessageTextRequest struct {
 	EditMessageRequest
 
@@ -614,7 +614,7 @@ type EditMessageTextRequest struct {
 	DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
 }
 
-// Use this entity to edit text and game messages.
+// EditMessageCaptionRequest Use this entity to edit text and game messages.
 type EditMessageCaptionRequest struct {
 	EditMessageRequest
 
@@ -622,7 +622,7 @@ type EditMessageCaptionRequest struct {
 	Caption string `json:"caption"`
 }
 
-// Use this entity to edit animation, audio, document, photo, or video messages.
+// EditMessageMediaRequest Use this entity to edit animation, audio, document, photo, or video messages.
 type EditMessageMediaRequest struct {
 	EditMessageRequest
 
@@ -630,7 +630,7 @@ type EditMessageMediaRequest struct {
 	Media InputMediaInterface `json:"media"`
 }
 
-// Use this entity to edit only the reply markup of messages
+// EditMessageReplyMarkupRequest Use this entity to edit only the reply markup of messages
 type EditMessageReplyMarkupRequest struct {
 	EditMessageRequest
 }

@@ -1,6 +1,6 @@
 package models
 
-// This object contains information about an incoming shipping query.
+// ShippingQuery This object contains information about an incoming shipping query.
 type ShippingQuery struct {
 	// Unique query identifier
 	ID string `json:"id"`

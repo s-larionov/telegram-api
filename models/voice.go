@@ -1,6 +1,6 @@
 package models
 
-// This object represents a voice note.
+// Voice This object represents a voice note.
 type Voice struct {
 	// Identifier for this file, which can be used to download or reuse the file
 	FileID string `json:"file_id"`

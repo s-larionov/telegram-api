@@ -1,6 +1,6 @@
 package models
 
-// This object represents a general file (as opposed to photos, voice messages and audio files).
+// Document This object represents a general file (as opposed to photos, voice messages and audio files).
 type Document struct {
 	// Identifier for this file, which can be used to download or reuse the file
 	FileID string `json:"file_id"`

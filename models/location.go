@@ -1,6 +1,6 @@
 package models
 
-// This object represents a point on the map.
+// Location This object represents a point on the map.
 type Location struct {
 	// Longitude as defined by sender
 	Longitude float64 `json:"longitude"`

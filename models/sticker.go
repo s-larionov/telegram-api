@@ -7,10 +7,10 @@ const (
 	MaskPositionPointChin     MaskPositionPoint = "chin"
 )
 
-// The part of the face relative to which the mask should be placed.
+// MaskPositionPoint The part of the face relative to which the mask should be placed.
 type MaskPositionPoint string
 
-// This object represents a sticker set.
+// StickerSet This object represents a sticker set.
 type StickerSet struct {
 	// Sticker set name
 	Name string `json:"name"`
@@ -28,7 +28,7 @@ type StickerSet struct {
 	Stickers []Sticker `json:"stickers"`
 }
 
-// This object represents a sticker.
+// Sticker This object represents a sticker.
 type Sticker struct {
 	// Identifier for this file, which can be used to download or reuse the file
 	FileID string `json:"file_id"`
@@ -62,7 +62,7 @@ type Sticker struct {
 	FileSize int `json:"file_size,omitempty"`
 }
 
-// This object describes the position on faces where a mask should be placed by default.
+// MaskPosition This object describes the position on faces where a mask should be placed by default.
 type MaskPosition struct {
 	// The part of the face relative to which the mask should be placed. One of “forehead”, “eyes”, “mouth”, or “chin”.
 	Point MaskPositionPoint `json:"point"`
@@ -79,7 +79,7 @@ type MaskPosition struct {
 	Scale float32 `json:"scale"`
 }
 
-// Use this entity to send static .WEBP or animated .TGS stickers.
+// SendStickerRequest Use this entity to send static .WEBP or animated .TGS stickers.
 type SendStickerRequest struct {
 	MessageRequestBase
 
@@ -89,7 +89,7 @@ type SendStickerRequest struct {
 	Sticker InputFile `json:"sticker"`
 }
 
-// Use this entity to create a new sticker set owned by a user. The bot will be able to edit the sticker
+// NewStickerSetRequest Use this entity to create a new sticker set owned by a user. The bot will be able to edit the sticker
 // set thus created. You must use exactly one of the fields png_sticker or tgs_sticker.
 type NewStickerSetRequest struct {
 	// User identifier of created sticker set owner
@@ -123,7 +123,7 @@ type NewStickerSetRequest struct {
 	MaskPosition *MaskPosition `json:"mask_position,omitempty"`
 }
 
-// Use this entity to add a new sticker to a set created by the bot. You must use exactly one of the fields png_sticker
+// AddStickerToSetSetRequest Use this entity to add a new sticker to a set created by the bot. You must use exactly one of the fields png_sticker
 // or tgs_sticker. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets
 // can have up to 50 stickers. Static sticker sets can have up to 120 stickers.
 type AddStickerToSetSetRequest struct {
@@ -150,7 +150,7 @@ type AddStickerToSetSetRequest struct {
 	MaskPosition *MaskPosition `json:"mask_position,omitempty"`
 }
 
-// Use this entity to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only.
+// StickerSetThumbRequest Use this entity to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only.
 type StickerSetThumbRequest struct {
 	// Sticker set name
 	Name string `json:"name"`

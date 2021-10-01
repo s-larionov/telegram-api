@@ -1,6 +1,6 @@
 package models
 
-// This object represents a venue.
+// Venue This object represents a venue.
 type Venue struct {
 	// Venue location
 	Location *Location `json:"location"`

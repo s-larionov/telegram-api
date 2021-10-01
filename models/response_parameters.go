@@ -1,6 +1,6 @@
 package models
 
-// Contains information about why a request was unsuccessful.
+// ResponseParameters Contains information about why a request was unsuccessful.
 type ResponseParameters struct {
 	// Optional. The group has been migrated to a supergroup with the specified identifier. This number may be greater
 	// than 32 bits and some programming languages may have difficulty/silent defects in interpreting it.

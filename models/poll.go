@@ -1,6 +1,6 @@
 package models
 
-// This object contains information about a poll.
+// Poll This object contains information about a poll.
 type Poll struct {
 	// Unique poll identifier
 	ID string `json:"id"`

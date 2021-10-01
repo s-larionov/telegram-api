@@ -1,6 +1,6 @@
 package models
 
-// This object represents an incoming inline query. When the user sends an empty query, your bot could return
+// InlineQuery This object represents an incoming inline query. When the user sends an empty query, your bot could return
 // some default or trending results.
 type InlineQuery struct {
 	// Unique identifier for this query
@@ -19,7 +19,7 @@ type InlineQuery struct {
 	Offset string `json:"offset"`
 }
 
-// Use this method to send answers to an inline query. On success, True is returned.
+// AnswerInlineQuery Use this method to send answers to an inline query. On success, True is returned.
 // No more than 50 results per query are allowed.
 type AnswerInlineQuery struct {
 	// Unique identifier for the answered query
@@ -93,7 +93,7 @@ func (r InlineQueryResult) GetType() InlineQueryResultType {
 	return r.Type
 }
 
-// Represents a link to an article or web page.
+// InlineQueryResultArticle Represents a link to an article or web page.
 type InlineQueryResultArticle struct {
 	InlineQueryResult
 
@@ -122,7 +122,7 @@ type InlineQueryResultArticle struct {
 	ThumbHeight int `json:"thumb_height,omitempty"`
 }
 
-// Represents a link to a photo. By default, this photo will be sent by the user with optional caption.
+// InlineQueryResultPhoto Represents a link to a ph oto. By default, this photo will be sent by the user with optional caption.
 // Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.
 type InlineQueryResultPhoto struct {
 	InlineQueryResult
@@ -159,7 +159,7 @@ type InlineQueryResultPhoto struct {
 	InputMessageContent InputMessageContentInterface `json:"input_message_content,omitempty"`
 }
 
-// Represents a link to an animated GIF file. By default, this animated GIF file will be sent by the user with
+// InlineQueryResultGif Represents a link to an animated GIF file. By default, this animated GIF file will be sent by the user with
 // optional caption. Alternatively, you can use input_message_content to send a message with the specified content
 // instead of the animation.
 type InlineQueryResultGif struct {
@@ -197,7 +197,7 @@ type InlineQueryResultGif struct {
 	InputMessageContent InputMessageContentInterface `json:"input_message_content,omitempty"`
 }
 
-// Represents a link to a video animation (H.264/MPEG-4 AVC video without sound). By default, this animated MPEG-4 file
+// InlineQueryResultMpeg4Gif Represents a link to a video animation (H.264/MPEG-4 AVC video without sound). By default, this animated MPEG-4 file
 // will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message
 // with the specified content instead of the animation.
 type InlineQueryResultMpeg4Gif struct {
@@ -235,7 +235,7 @@ type InlineQueryResultMpeg4Gif struct {
 	InputMessageContent InputMessageContentInterface `json:"input_message_content,omitempty"`
 }
 
-// Represents a link to a page containing an embedded video player or a video file. By default, this video file will
+// InlineQueryResultVideo Represents a link to a page containing an embedded video player or a video file. By default, this video file will
 // be sent by the user with an optional caption. Alternatively, you can use input_message_content to send a message
 // with the specified content instead of the video.
 // If an InlineQueryResultVideo message contains an embedded video (e.g., YouTube), you must replace its content using
@@ -282,7 +282,7 @@ type InlineQueryResultVideo struct {
 	InputMessageContent InputMessageContentInterface `json:"input_message_content,omitempty"`
 }
 
-// Represents a link to an MP3 audio file. By default, this audio file will be sent by the user. Alternatively,
+// InlineQueryResultAudio Represents a link to an MP3 audio file. By default, this audio file will be sent by the user. Alternatively,
 // you can use input_message_content to send a message with the specified content instead of the audio.
 // Note: This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.
 type InlineQueryResultAudio struct {
@@ -314,7 +314,7 @@ type InlineQueryResultAudio struct {
 	InputMessageContent InputMessageContentInterface `json:"input_message_content,omitempty"`
 }
 
-// Represents a link to a voice recording in an .OGG container encoded with OPUS. By default, this voice recording will
+// InlineQueryResultVoice Represents a link to a voice recording in an .OGG container encoded with OPUS. By default, this voice recording will
 // be sent by the user. Alternatively, you can use input_message_content to send a message with the specified content
 // instead of the the voice message.
 // Note: This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.
@@ -344,7 +344,7 @@ type InlineQueryResultVoice struct {
 	InputMessageContent InputMessageContentInterface `json:"input_message_content,omitempty"`
 }
 
-// Represents a link to a file. By default, this file will be sent by the user with an optional caption. Alternatively,
+// InlineQueryResultDocument Represents a link to a file. By default, this file will be sent by the user with an optional caption. Alternatively,
 // you can use input_message_content to send a message with the specified content instead of the file. Currently,
 // only .PDF and .ZIP files can be sent using this method.
 // Note: This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.
@@ -386,7 +386,7 @@ type InlineQueryResultDocument struct {
 	ThumbHeight int `json:"thumb_height,omitempty"`
 }
 
-// Represents a location on a map. By default, the location will be sent by the user. Alternatively, you can use
+// InlineQueryResultLocation Represents a location on a map. By default, the location will be sent by the user. Alternatively, you can use
 // input_message_content to send a message with the specified content instead of the location.
 type InlineQueryResultLocation struct {
 	InlineQueryResult
@@ -416,7 +416,7 @@ type InlineQueryResultLocation struct {
 	ThumbHeight int `json:"thumb_height,omitempty"`
 }
 
-// Represents a venue. By default, the venue will be sent by the user. Alternatively, you can use input_message_content
+// InlineQueryResultVenue Represents a venue. By default, the venue will be sent by the user. Alternatively, you can use input_message_content
 // to send a message with the specified content instead of the venue.
 // Note: This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.
 type InlineQueryResultVenue struct {
@@ -454,7 +454,7 @@ type InlineQueryResultVenue struct {
 	ThumbHeight int `json:"thumb_height,omitempty"`
 }
 
-// Represents a contact with a phone number. By default, this contact will be sent by the user. Alternatively,
+// InlineQueryResultContact Represents a contact with a phone number. By default, this contact will be sent by the user. Alternatively,
 // you can use input_message_content to send a message with the specified content instead of the contact.
 // Note: This will only work in Telegram versions released after 9 April, 2016. Older clients will ignore them.
 type InlineQueryResultContact struct {
@@ -485,7 +485,7 @@ type InlineQueryResultContact struct {
 	ThumbHeight int `json:"thumb_height,omitempty"`
 }
 
-// Represents a Game.
+// InlineQueryResultGame Represents a Game.
 // Note: This will only work in Telegram versions released after October 1, 2016. Older clients will not display any
 // inline results if a game result is among them.
 type InlineQueryResultGame struct {
@@ -495,7 +495,7 @@ type InlineQueryResultGame struct {
 	GameShortName string `json:"game_short_name"`
 }
 
-// Represents a link to a sticker stored on the Telegram servers. By default, this sticker will be sent by the user.
+// InlineQueryResultSticker Represents a link to a sticker stored on the Telegram servers. By default, this sticker will be sent by the user.
 // Alternatively, you can use input_message_content to send a message with the specified content instead of the sticker.
 type InlineQueryResultSticker struct {
 	InlineQueryResult
@@ -521,7 +521,7 @@ func (c InputMessageContent) GetType() InputMessageContentType {
 	return c.t
 }
 
-// Represents the content of a text message to be sent as the result of an inline query.
+// InputTextMessageContent Represents the content of a text message to be sent as the result of an inline query.
 type InputTextMessageContent struct {
 	InputMessageContent
 
@@ -536,7 +536,7 @@ type InputTextMessageContent struct {
 	DisableWebPagePreview bool `json:"disable_web_page_preview,omitempty"`
 }
 
-// Represents the content of a location message to be sent as the result of an inline query.
+// InputLocationMessageContent Represents the content of a location message to be sent as the result of an inline query.
 type InputLocationMessageContent struct {
 	InputMessageContent
 
@@ -550,7 +550,7 @@ type InputLocationMessageContent struct {
 	LivePeriod int32 `json:"live_period,omitempty"`
 }
 
-// Represents the content of a venue message to be sent as the result of an inline query.
+// InputVenueMessageContent Represents the content of a venue message to be sent as the result of an inline query.
 type InputVenueMessageContent struct {
 	InputMessageContent
 
@@ -574,7 +574,7 @@ type InputVenueMessageContent struct {
 	FoursquareType string `json:"foursquare_type"`
 }
 
-// Represents the content of a contact message to be sent as the result of an inline query.
+// InputContactMessageContent Represents the content of a contact message to be sent as the result of an inline query.
 type InputContactMessageContent struct {
 	InputMessageContent
 
@@ -591,7 +591,7 @@ type InputContactMessageContent struct {
 	VCard string `json:"v_card,omitempty"`
 }
 
-// Represents a result of an inline query that was chosen by the user and sent to their chat partner.
+// ChosenInlineResult Represents a result of an inline query that was chosen by the user and sent to their chat partner.
 // Note: It is necessary to enable inline feedback via @Botfather in order to receive these objects in updates.
 type ChosenInlineResult struct {
 	// The unique identifier for the result that was chosen

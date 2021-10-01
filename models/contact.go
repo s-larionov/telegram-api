@@ -1,6 +1,6 @@
 package models
 
-// This object represents a phone contact.
+// Contact This object represents a phone contact.
 type Contact struct {
 	// Contact's phone number
 	PhoneNumber string `json:"phone_number"`

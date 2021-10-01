@@ -1,6 +1,6 @@
 package models
 
-// This object represents an audio file to be treated as music by the Telegram clients.
+// Audio This object represents an audio file to be treated as music by the Telegram clients.
 type Audio struct {
 	// Identifier for this file, which can be used to download or reuse the file
 	FileID string `json:"file_id"`

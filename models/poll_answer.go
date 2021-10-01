@@ -1,6 +1,6 @@
 package models
 
-// This object represents an answer of a user in a non-anonymous poll.
+// PollAnswer This object represents an answer of a user in a non-anonymous poll.
 type PollAnswer struct {
 	// Unique poll identifier
 	PollID string `json:"poll_id"`

@@ -21,7 +21,7 @@ func (m replyMarkup) GetType() ReplyMarkupType {
 	return m.t
 }
 
-// Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if
+// ForceReply Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if
 // the user has selected the bot‘s message and tapped ’Reply'). This can be extremely useful if you want to create
 // user-friendly step-by-step interfaces without having to sacrifice privacy mode.
 //
@@ -61,7 +61,7 @@ func NewForceReply(selective ...bool) ForceReply {
 	return reply
 }
 
-// Upon receiving a message with this object, Telegram clients will remove the current custom keyboard and display
+// ReplyKeyboardRemove Upon receiving a message with this object, Telegram clients will remove the current custom keyboard and display
 // the default letter-keyboard. By default, custom keyboards are displayed until a new keyboard is sent by a bot.
 // An exception is made for one-time keyboards that are hidden immediately after the user presses a button
 // (see ReplyKeyboardMarkup).
@@ -98,7 +98,7 @@ func NewKeyboardRemoveReply(selective ...bool) ReplyKeyboardRemove {
 	return reply
 }
 
-// This object represents a custom keyboard with reply options (see Introduction to bots for details and examples).
+// ReplyKeyboardMarkup This object represents a custom keyboard with reply options (see Introduction to bots for details and examples).
 type ReplyKeyboardMarkup struct {
 	replyMarkup
 
@@ -143,7 +143,7 @@ func NewKeyboardMarkupReply(keyboard [][]KeyboardButton, resize, oneTime bool, s
 	return reply
 }
 
-// This object represents an inline keyboard that appears right next to the message it belongs to.
+// InlineKeyboardMarkup This object represents an inline keyboard that appears right next to the message it belongs to.
 //
 // Note: This will only work in Telegram versions released after 9 April, 2016. Older clients
 //       will display unsupported message.
